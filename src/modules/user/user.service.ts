@@ -1,13 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/database/services';
 import { CreateUserDto, GetUsersQueryDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/providers';
+import { isNotEmpty } from 'class-validator';
+import { RoleService } from '../role';
 
 @Injectable()
 export class UserService {
-  constructor(private dbContext: PrismaService) { }
+  constructor(private dbContext: PrismaService, private roleService: RoleService) { }
+  private readonly logger: Logger = new Logger(UserService.name);
 
   createUser = async (data: CreateUserDto) => {
+    const { email, roleId } = data;
+
+    const rolesData = await this.roleService.roleExists(roleId);
+
+    if (!rolesData) {
+      throw new BadRequestException('The roles provided are invalid');
+    }
+
+    const existedEmail = await this.findUserByEmail(email);
+
+    if (isNotEmpty(existedEmail)) {
+      throw new BadRequestException('The username has already been used');
+    }
+
+
     const user = await this.dbContext.user.create({
       data,
     });
@@ -24,11 +42,8 @@ export class UserService {
         lastName: true,
         phoneNumber: true,
         address: true,
-        role: {
-          select: {
-            name: true
-          }
-        }
+        avatarUrl: true,
+        roleId: true
       }
     })
     return user;
@@ -46,6 +61,7 @@ export class UserService {
         address: true,
         role: {
           select: {
+            id: true,
             name: true
           }
         }

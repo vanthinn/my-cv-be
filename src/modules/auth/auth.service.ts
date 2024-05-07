@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from '../user/dto';
 import { RequestUser, compareHash, hashPassword } from 'src/common';
+import { getUsersPayload } from './dto/getUserPayload.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,8 +18,8 @@ export class AuthService {
     private configService: ConfigService,
   ) { }
 
-  signIn = async (username: string, password: string) => {
-    const user = await this.userService.findUserByEmail(username);
+  signIn = async (email: string, password: string) => {
+    const user = await this.userService.findUserByEmail(email);
 
     if (!user) throw new BadRequestException('User does not exist');
 
@@ -26,8 +27,8 @@ export class AuthService {
 
     if (!passwordMatches)
       throw new BadRequestException('Password is incorrect');
-    const tokens = await this.getTokens(user.id, user.email);
-    // await this.updateRefreshToken(user.id, tokens.refreshToken);
+    const tokens = await this.getTokens(user);
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   };
 
@@ -44,8 +45,8 @@ export class AuthService {
       ...createUserDto,
       password: hash,
     });
-    const tokens = await this.getTokens(newUser.id, newUser.email);
-    // await this.updateRefreshToken(newUser.id, tokens.refreshToken);
+    const tokens = await this.getTokens(newUser);
+    await this.updateRefreshToken(newUser.id, tokens.refreshToken);
     return tokens;
   };
 
@@ -53,12 +54,12 @@ export class AuthService {
   //   return this.userService.updateUser(userId, { refreshToken: null });
   // }
 
-  // async updateRefreshToken(userId: string, refreshToken: string) {
-  //   const hashedRefreshToken = await hashPassword(refreshToken);
-  //   await this.userService.updateUser(userId, {
-  //     refreshToken: hashedRefreshToken,
-  //   });
-  // }
+  async updateRefreshToken(userId: string, refreshToken: string) {
+    const hashedRefreshToken = await hashPassword(refreshToken);
+    await this.userService.updateUser(userId, {
+      refreshToken: hashedRefreshToken,
+    });
+  }
 
   // async refreshTokens(userId: string, refreshToken: string) {
   //   const user = await this.userService.findUserById(userId);
@@ -74,28 +75,34 @@ export class AuthService {
   //   if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
 
   //   const tokens = await this.getTokens(user.id, user.email);
-
-  //   // await this.updateRefreshToken(user.id, tokens.refreshToken);
-
+  //   await this.updateRefreshToken(user.id, tokens.refreshToken);
   //   return tokens;
   // }
 
-  async getTokens(userId: string, username: string) {
+  async getTokens(userData: getUsersPayload) {
+    const user = {
+      email: userData.email,
+      full: userData.firstName + ' ' + userData.lastName,
+      role: userData.roleId,
+      avatarUrl: userData.avatarUrl,
+    };
+
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
-          sub: userId,
-          username,
+          id: userData.id,
+          session: await hashPassword(Date.now().toString()),
+          ...user,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m',
+          expiresIn: '120m',
         },
       ),
       this.jwtService.signAsync(
         {
-          sub: userId,
-          username,
+          id: userData.id,
+          ...user,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -116,6 +123,6 @@ export class AuthService {
     });
 
     const user = await this.userService.findUserById(claims.id);
-    if (user) return claims;
+    // if (user) return claims;
   }
 }

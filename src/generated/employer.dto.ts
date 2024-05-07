@@ -1,9 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from './user.entity';
-import { RoleToPermissionEntity } from './role-to-permission.entity';
-import { EmployerEntity } from './employer.entity';
 
-export class RoleEntity {
+export class EmployerDto {
   @ApiProperty({
     required: false,
   })
@@ -23,37 +20,43 @@ export class RoleEntity {
   @ApiProperty({
     required: false,
   })
-  name: string;
+  firstName: string;
   @ApiProperty({
     required: false,
   })
-  displayName: string;
+  lastName: string;
+  @ApiProperty({
+    required: false,
+  })
+  email: string;
+  @ApiProperty({
+    required: false,
+  })
+  password: string;
+  @ApiProperty({
+    required: false,
+  })
+  phoneNumber: string;
   @ApiProperty({
     required: false,
     nullable: true,
   })
-  description: string | null;
+  gender: string | null;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  dateOfBirth: Date | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  canBeUpdated: boolean;
+  address: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  canBeDeleted: boolean;
-  @ApiProperty({
-    isArray: true,
-    required: false,
-  })
-  users?: UserEntity[];
-  @ApiProperty({
-    isArray: true,
-    required: false,
-  })
-  permissions?: RoleToPermissionEntity[];
-  @ApiProperty({
-    isArray: true,
-    required: false,
-  })
-  Employer?: EmployerEntity[];
+  refreshToken: string | null;
 }

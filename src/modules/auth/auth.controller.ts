@@ -20,16 +20,16 @@ import { ApiTags } from '@nestjs/swagger';
 export class AuthController {
   constructor(private authService: AuthService) { }
 
-  // @Post('signUp')
-  // signUp(@Body() createUserDto: CreateUserDto) {
-  //   return this.authService.signUp(createUserDto);
-  // }
+  @Post('signUp')
+  signUp(@Body() createUserDto: CreateUserDto) {
+    return this.authService.signUp(createUserDto);
+  }
 
-  // @Post('login')
-  // login(@Body() data: LoginCredentialDto) {
-  //   const { username, password } = data;
-  //   return this.authService.signIn(username, password);
-  // }
+  @Post('login')
+  login(@Body() data: LoginCredentialDto) {
+    const { email, password } = data;
+    return this.authService.signIn(email, password);
+  }
 
   // @UseGuards(AccessTokenGuard)
   // @Get('logout')

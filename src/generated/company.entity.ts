@@ -1,33 +1,53 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from './user.entity';
-import { RoleToPermissionEntity } from './role-to-permission.entity';
 import { EmployerEntity } from './employer.entity';
 
-export class RoleEntity {
+export class CompanyEntity {
   @ApiProperty({
     required: false,
   })
   id: string;
   @ApiProperty({
-    type: 'string',
-    format: 'date-time',
     required: false,
+    nullable: true,
   })
-  createdAt: Date;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-  })
-  updatedAt: Date;
+  displayName: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  name: string;
+  address: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  displayName: string;
+  logoUrl: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  imageUrl: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  email: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  phoneNumber: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  filedOfActivity: string | null;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+    nullable: true,
+  })
+  scale: number | null;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -36,24 +56,9 @@ export class RoleEntity {
   @ApiProperty({
     required: false,
   })
-  canBeUpdated: boolean;
+  employerId: string;
   @ApiProperty({
     required: false,
   })
-  canBeDeleted: boolean;
-  @ApiProperty({
-    isArray: true,
-    required: false,
-  })
-  users?: UserEntity[];
-  @ApiProperty({
-    isArray: true,
-    required: false,
-  })
-  permissions?: RoleToPermissionEntity[];
-  @ApiProperty({
-    isArray: true,
-    required: false,
-  })
-  Employer?: EmployerEntity[];
+  employer?: EmployerEntity;
 }

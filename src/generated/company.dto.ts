@@ -1,59 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserDto {
+export class CompanyDto {
   @ApiProperty({
     required: false,
   })
   id: string;
   @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-  })
-  createdAt: Date;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-  })
-  updatedAt: Date;
-  @ApiProperty({
-    required: false,
-  })
-  firstName: string;
-  @ApiProperty({
-    required: false,
-  })
-  lastName: string;
-  @ApiProperty({
-    required: false,
-  })
-  email: string;
-  @ApiProperty({
-    required: false,
-  })
-  password: string;
-  @ApiProperty({
     required: false,
     nullable: true,
   })
-  avatarUrl: string | null;
-  @ApiProperty({
-    required: false,
-  })
-  phoneNumber: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  gender: string | null;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-    nullable: true,
-  })
-  dateOfBirth: Date | null;
+  displayName: string | null;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -63,5 +19,37 @@ export class UserDto {
     required: false,
     nullable: true,
   })
-  refreshToken: string | null;
+  logoUrl: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  imageUrl: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  email: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  phoneNumber: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  filedOfActivity: string | null;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+    nullable: true,
+  })
+  scale: number | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  description: string | null;
 }

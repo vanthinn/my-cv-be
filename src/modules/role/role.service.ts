@@ -104,4 +104,9 @@ export class RoleService {
 
         this.logger.log({ updatedRole }, 'updated role record');
     }
+
+    async roleExists(roleId: string): Promise<boolean> {
+        const role = await this.dbContext.role.findUnique({ where: { id: roleId } });
+        return !!role;
+    }
 }

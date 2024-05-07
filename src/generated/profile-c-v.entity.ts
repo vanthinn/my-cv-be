@@ -1,22 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CvEntity } from './cv.entity';
 
-export class UserDto {
+export class ProfileCVEntity {
   @ApiProperty({
     required: false,
   })
   id: string;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-  })
-  createdAt: Date;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    required: false,
-  })
-  updatedAt: Date;
   @ApiProperty({
     required: false,
   })
@@ -32,28 +21,17 @@ export class UserDto {
   @ApiProperty({
     required: false,
   })
-  password: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  avatarUrl: string | null;
-  @ApiProperty({
-    required: false,
-  })
   phoneNumber: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  gender: string | null;
+  gender: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
     required: false,
-    nullable: true,
   })
-  dateOfBirth: Date | null;
+  dateOfBirth: Date;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -63,5 +41,23 @@ export class UserDto {
     required: false,
     nullable: true,
   })
-  refreshToken: string | null;
+  avatarUrl: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  facebook: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  linkedin: string | null;
+  @ApiProperty({
+    required: false,
+  })
+  CVId: string;
+  @ApiProperty({
+    required: false,
+  })
+  CV?: CvEntity;
 }

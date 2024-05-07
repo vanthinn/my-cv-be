@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleEntity } from './role.entity';
+import { CvEntity } from './cv.entity';
 
 export class UserEntity {
   @ApiProperty({
@@ -36,6 +37,11 @@ export class UserEntity {
   password: string;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  avatarUrl: string | null;
+  @ApiProperty({
+    required: false,
   })
   phoneNumber: string;
   @ApiProperty({
@@ -57,6 +63,20 @@ export class UserEntity {
   address: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  refreshToken: string | null;
+  @ApiProperty({
+    required: false,
+  })
+  roleId: string;
+  @ApiProperty({
+    required: false,
   })
   role?: RoleEntity;
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  CVs?: CvEntity[];
 }

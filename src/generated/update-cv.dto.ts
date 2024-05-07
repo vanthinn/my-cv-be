@@ -1,73 +1,58 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateUserDto {
+export class UpdateCvDto {
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  firstName?: string;
+  template?: string;
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  lastName?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  email?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  password?: string;
+  title?: string;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  avatarUrl?: string | null;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  phoneNumber?: string;
+  fontStyle?: string | null;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  gender?: string | null;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    default: 'now',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  dateOfBirth?: Date | null;
+  fontSize?: string | null;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  address?: string | null;
+  color?: string | null;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  refreshToken?: string | null;
+  skills?: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  summary?: string | null;
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  state?: boolean;
 }

@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { RoleEntity } from './role.entity';
+import { CompanyEntity } from './company.entity';
 
-export class UserDto {
+export class EmployerEntity {
   @ApiProperty({
     required: false,
   })
@@ -35,11 +37,6 @@ export class UserDto {
   password: string;
   @ApiProperty({
     required: false,
-    nullable: true,
-  })
-  avatarUrl: string | null;
-  @ApiProperty({
-    required: false,
   })
   phoneNumber: string;
   @ApiProperty({
@@ -64,4 +61,17 @@ export class UserDto {
     nullable: true,
   })
   refreshToken: string | null;
+  @ApiProperty({
+    required: false,
+  })
+  roleId: string;
+  @ApiProperty({
+    required: false,
+  })
+  role?: RoleEntity;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  Company?: CompanyEntity | null;
 }

@@ -1,7 +1,7 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateUserDto {
+export class UpdateProfileCVDto {
   @ApiProperty({
     required: false,
   })
@@ -25,37 +25,13 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  password?: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  avatarUrl?: string | null;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
   phoneNumber?: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  gender?: string | null;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    default: 'now',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  dateOfBirth?: Date | null;
+  gender?: string;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -69,5 +45,19 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  refreshToken?: string | null;
+  avatarUrl?: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  facebook?: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  linkedin?: string | null;
 }

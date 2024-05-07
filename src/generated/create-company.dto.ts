@@ -1,40 +1,45 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateUserDto {
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  firstName?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  lastName?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  email?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  password?: string;
+export class CreateCompanyDto {
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  avatarUrl?: string | null;
+  displayName?: string;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  address?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  logoUrl?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  email?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
@@ -45,29 +50,21 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  gender?: string | null;
+  filedOfActivity?: string;
   @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    default: 'now',
+    type: 'integer',
+    format: 'int32',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsDateString()
-  dateOfBirth?: Date | null;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  address?: string | null;
+  @IsInt()
+  scale?: number;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  refreshToken?: string | null;
+  description?: string;
 }

@@ -1,68 +1,52 @@
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserDto {
+export class CreateCvDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  firstName: string;
+  template: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  lastName: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  email: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  password: string;
+  title: string;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  avatarUrl?: string;
+  fontStyle?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  fontSize?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  color?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  skills?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  summary?: string;
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  phoneNumber: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  gender?: string;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    default: 'now',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString()
-  dateOfBirth?: Date;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  address?: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  refreshToken?: string;
+  @IsBoolean()
+  state: boolean;
 }

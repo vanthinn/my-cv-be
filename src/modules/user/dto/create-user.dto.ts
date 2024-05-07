@@ -50,6 +50,14 @@ export class CreateUserDto {
   dateOfBirth: Date;
 
   @ApiProperty({
+    description: 'Date of birth',
+  })
+  @IsOptional()
+  @IsISO8601()
+  @IsNotEmpty()
+  avatarUrl: string;
+
+  @ApiProperty({
     description: 'Gender of user',
   })
   @IsOptional()
@@ -65,10 +73,18 @@ export class CreateUserDto {
   @IsString()
   address: string;
 
-  // @ApiProperty({
-  //   description: 'Role names',
-  //   example: [UserRole.ADMIN],
-  // })
-  // @IsEnum(UserRole, { each: true })
-  // role: string;
+  @ApiPropertyOptional({
+    description: 'Address of user',
+  })
+  @IsOptional()
+  @MaxLength(255)
+  @IsString()
+  refreshToken: string;
+
+  @ApiProperty({
+    description: 'Role names',
+    example: [UserRole.ADMIN],
+  })
+  @IsString()
+  roleId: string;
 }
