@@ -24,8 +24,9 @@ export class EducationEntity {
   fieldOfStudy: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  GPA: string;
+  GPA: string | null;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

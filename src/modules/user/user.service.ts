@@ -91,5 +91,6 @@ export class UserService {
       },
       data,
     });
+    this.logger.log('Updated the user records', { user });
   };
 }

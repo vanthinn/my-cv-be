@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEducationDto {
@@ -18,8 +18,11 @@ export class CreateEducationDto {
   @IsNotEmpty()
   @IsString()
   fieldOfStudy: string;
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
   @IsString()
-  GPA: string;
+  GPA?: string;
 }

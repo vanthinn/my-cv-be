@@ -156,7 +156,7 @@ model Education {
   location     String   @map("location") @db.VarChar(100)
   state        String   @map("state") @db.VarChar(100)
   fieldOfStudy String   @map("field_of_study") @db.VarChar
-  GPA          String   @map("gpa") @db.VarChar(5)
+  GPA          String?  @map("gpa") @db.VarChar(5)
   startDate    DateTime @default(now()) @map("start_date") @db.Timestamptz(6)
   endDate      DateTime @default(now()) @map("end_date") @db.Timestamptz(6)
 

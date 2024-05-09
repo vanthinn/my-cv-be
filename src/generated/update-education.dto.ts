@@ -28,8 +28,9 @@ export class UpdateEducationDto {
   fieldOfStudy?: string;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  GPA?: string;
+  GPA?: string | null;
 }
