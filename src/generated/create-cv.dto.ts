@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCvDto {
@@ -32,12 +38,12 @@ export class CreateCvDto {
   @IsString()
   color?: string;
   @ApiProperty({
-    required: false,
-    nullable: true,
+    isArray: true,
   })
-  @IsOptional()
-  @IsString()
-  skills?: string;
+  @IsNotEmpty()
+  @IsArray()
+  @IsString({ each: true })
+  skills: string[];
   @ApiProperty({
     required: false,
     nullable: true,

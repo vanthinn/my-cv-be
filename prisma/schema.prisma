@@ -45,9 +45,12 @@ model User {
   refreshToken String?   @map("refresh_token") @db.VarChar(100)
 
   // Relation
-  roleId String @db.Uuid
-  role   Role   @relation(fields: [roleId], references: [id])
-  cvs    CV[]
+  roleId    String   @db.Uuid
+  role      Role     @relation(fields: [roleId], references: [id])
+  cvs       CV[]
+  companyId String?  @db.Uuid
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_user_to_company")
+  jobs      Job[]
 
   @@unique([email], map: "ixuq_user_email")
   @@map("user")
@@ -66,7 +69,6 @@ model Role {
   //Relation
   users       User[]
   permissions RoleToPermission[]
-  employers   Employer[]
 
   @@map("role")
 }
@@ -111,7 +113,7 @@ model CV {
   fontStyle String?  @map("font_style") @db.VarChar(50)
   fontSize  String?  @map("font_size") @db.VarChar(50)
   color     String?  @map("color") @db.VarChar(50)
-  skills    String?  @db.VarChar(500)
+  skills    String[] @db.VarChar(500)
   summary   String?  @map("summary") @db.VarChar(1000)
   state     Boolean  @db.Boolean
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -126,6 +128,7 @@ model CV {
   education    Education?
   certificates Certification[]
   language     Language[]
+  jobApply     JobApply[]
 
   @@map("cv")
 }
@@ -208,40 +211,69 @@ model Language {
 }
 
 model Company {
-  id              String  @id(map: "pk_company") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
-  displayName     String? @map("display_name") @db.VarChar(50)
-  address         String? @db.VarChar(50)
-  logoUrl         String? @db.VarChar(50)
-  imageUrl        String? @db.VarChar(500)
-  email           String? @db.VarChar(50)
-  phoneNumber     String? @map("phone_number") @db.VarChar(50)
-  filedOfActivity String? @map("filed_of_activity") @db.VarChar(50)
-  scale           Int?    @map("scale") @db.Integer
-  description     String? @map("description") @db.VarChar(1000)
+  id              String    @id(map: "pk_company") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  displayName     String    @map("display_name") @db.VarChar(50)
+  address         String    @db.VarChar(50)
+  logoUrl         String    @db.VarChar(500)
+  imageUrl        String?   @db.VarChar(500)
+  email           String    @db.VarChar(50)
+  phoneNumber     String    @map("phone_number") @db.VarChar(50)
+  fieldOfActivity String    @map("filed_of_activity") @db.VarChar(50)
+  scale           String    @map("scale") @db.VarChar(100)
+  description     String?   @map("description") @db.VarChar(1000)
+  website         String?   @map("website") @db.VarChar(50)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz(6)
 
-  employerId String   @unique @db.Uuid
-  employer   Employer @relation(fields: [employerId], references: [id])
+  users User[]
+  jobs  Job[]
+
+  @@map("company")
 }
 
-model Employer {
-  id           String    @id(map: "pk_employer") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  firstName    String    @map("first_name") @db.VarChar(100)
-  lastName     String    @map("last_name") @db.VarChar(100)
-  email        String    @map("email") @db.VarChar(255)
-  password     String    @map("password")
-  phoneNumber  String    @map("phone_number") @db.VarChar(10)
-  gender       String?   @map("gender") @db.VarChar(20)
-  dateOfBirth  DateTime? @default(now()) @map("date_of_birth") @db.Timestamptz(6)
-  address      String?   @map("address") @db.VarChar(100)
-  refreshToken String?   @map("refresh_token") @db.VarChar(100)
+//Job_Offer
+model Job {
+  id          String    @id(map: "pk_job") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  jobTitle    String    @db.VarChar(50)
+  experience  String    @db.VarChar(50)
+  salary      String    @db.VarChar(100)
+  skills      String[]  @db.VarChar(200)
+  jobType     String    @db.VarChar(50)
+  education   String?   @db.VarChar(50)
+  deadline    DateTime  @default(now()) @map("deadline") @db.Timestamptz(6)
+  description String    @db.VarChar(1000)
+  status      String    @db.VarChar(50)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
 
-  // Relation
-  roleId  String   @unique @db.Uuid
-  role    Role     @relation(fields: [roleId], references: [id])
-  company Company?
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "fk_user_to_job")
 
-  @@unique([email], map: "ixuq_employer_email")
-  @@map("employer")
+  companyId String  @db.Uuid
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_job_to_company")
+
+  jobApply JobApply[]
+
+  @@map("job")
+}
+
+model JobApply {
+  id            String @id(map: "pk_job_apply") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  candidateName String @db.VarChar(50)
+  email         String @db.VarChar(50)
+  status        String @db.VarChar(50)
+
+  jobId String @db.Uuid
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade, map: "fk_job_to_job_apply")
+
+  CVId String @db.Uuid
+  CV   CV     @relation(fields: [CVId], references: [id], onDelete: Cascade, map: "fk_cv_to_job_apply")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@map("job_apply")
 }

@@ -29,10 +29,10 @@ export class CvDto {
   })
   color: string | null;
   @ApiProperty({
+    isArray: true,
     required: false,
-    nullable: true,
   })
-  skills: string | null;
+  skills: string[];
   @ApiProperty({
     required: false,
     nullable: true,

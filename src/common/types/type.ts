@@ -6,7 +6,7 @@ export type JwtPayload = {
 export type RequestUser = {
   id: string;
   fullName: string;
-  roles: string[];
+  roleId: string[];
   session: string;
   avatarUrl: string | null;
 };

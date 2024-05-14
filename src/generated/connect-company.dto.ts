@@ -1,4 +1,3 @@
 export class ConnectCompanyDto {
-  id?: string;
-  employerId?: string;
+  id: string;
 }

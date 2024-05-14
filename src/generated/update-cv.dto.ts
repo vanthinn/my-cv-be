@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCvDto {
@@ -36,12 +36,13 @@ export class UpdateCvDto {
   @IsString()
   color?: string | null;
   @ApiProperty({
+    isArray: true,
     required: false,
-    nullable: true,
   })
   @IsOptional()
-  @IsString()
-  skills?: string | null;
+  @IsArray()
+  @IsString({ each: true })
+  skills?: string[];
   @ApiProperty({
     required: false,
     nullable: true,

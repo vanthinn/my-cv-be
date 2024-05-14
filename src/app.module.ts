@@ -6,6 +6,8 @@ import { UserModule } from './modules/user';
 import { AuthModule } from './modules/auth';
 import { RoleModule } from './modules/role';
 import { CVModule } from './modules/cv';
+import { CompanyModule } from './modules/company';
+import { JobOfferModule } from './modules/jobOffer';
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { CVModule } from './modules/cv';
     UserModule,
     AuthModule,
     RoleModule,
-    CVModule
+    CVModule,
+    CompanyModule,
+    JobOfferModule
   ],
   controllers: [AppController],
   providers: [AppService],

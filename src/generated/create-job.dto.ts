@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsDateString,
   IsNotEmpty,
   IsOptional,
@@ -6,56 +7,45 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCompanyDto {
+export class CreateJobDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  displayName: string;
+  jobTitle: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  address: string;
+  experience: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  logoUrl: string;
+  salary: string;
+  @ApiProperty({
+    isArray: true,
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @IsString({ each: true })
+  skills: string[];
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  jobType: string;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  imageUrl?: string;
+  education?: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  email: string;
+  description: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  phoneNumber: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  fieldOfActivity: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  scale: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  description?: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  website?: string;
+  status: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

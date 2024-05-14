@@ -1,6 +1,6 @@
 import { EducationDto } from './../../../generated/education.dto';
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 import { createEducationDto } from './ceateEducation.dto';
 import { type } from 'os';
 import { Type } from 'class-transformer';
@@ -50,8 +50,8 @@ export class CreateCVDto {
         description: 'username of the user',
     })
     @IsOptional()
-    @IsString()
-    skills?: string;
+    @IsArray()
+    skills?: string[];
 
     @ApiProperty({
         description: 'username of the user',

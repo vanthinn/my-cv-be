@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EmployerEntity } from './employer.entity';
+import { UserEntity } from './user.entity';
+import { JobEntity } from './job.entity';
 
 export class CompanyEntity {
   @ApiProperty({
@@ -8,19 +9,16 @@ export class CompanyEntity {
   id: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  displayName: string | null;
+  displayName: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  address: string | null;
+  address: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  logoUrl: string | null;
+  logoUrl: string;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -28,26 +26,20 @@ export class CompanyEntity {
   imageUrl: string | null;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  email: string | null;
+  email: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  phoneNumber: string | null;
+  phoneNumber: string;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  filedOfActivity: string | null;
+  fieldOfActivity: string;
   @ApiProperty({
-    type: 'integer',
-    format: 'int32',
     required: false,
-    nullable: true,
   })
-  scale: number | null;
+  scale: string;
   @ApiProperty({
     required: false,
     nullable: true,
@@ -55,10 +47,36 @@ export class CompanyEntity {
   description: string | null;
   @ApiProperty({
     required: false,
+    nullable: true,
   })
-  employerId: string;
+  website: string | null;
   @ApiProperty({
+    type: 'string',
+    format: 'date-time',
     required: false,
   })
-  employer?: EmployerEntity;
+  createdAt: Date;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  updatedAt: Date;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  deletedAt: Date | null;
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  users?: UserEntity[];
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  jobs?: JobEntity[];
 }

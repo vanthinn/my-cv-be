@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleEntity } from './role.entity';
 import { CvEntity } from './cv.entity';
+import { CompanyEntity } from './company.entity';
+import { JobEntity } from './job.entity';
 
 export class UserEntity {
   @ApiProperty({
@@ -79,4 +81,19 @@ export class UserEntity {
     required: false,
   })
   cvs?: CvEntity[];
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  companyId: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  company?: CompanyEntity | null;
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  jobs?: JobEntity[];
 }

@@ -5,6 +5,7 @@ import { ProfileCVEntity } from './profile-c-v.entity';
 import { EducationEntity } from './education.entity';
 import { CertificationEntity } from './certification.entity';
 import { LanguageEntity } from './language.entity';
+import { JobApplyEntity } from './job-apply.entity';
 
 export class CvEntity {
   @ApiProperty({
@@ -35,10 +36,10 @@ export class CvEntity {
   })
   color: string | null;
   @ApiProperty({
+    isArray: true,
     required: false,
-    nullable: true,
   })
-  skills: string | null;
+  skills: string[];
   @ApiProperty({
     required: false,
     nullable: true,
@@ -99,4 +100,9 @@ export class CvEntity {
     required: false,
   })
   language?: LanguageEntity[];
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  jobApply?: JobApplyEntity[];
 }

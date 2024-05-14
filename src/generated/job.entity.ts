@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserEntity } from './user.entity';
+import { CompanyEntity } from './company.entity';
+import { JobApplyEntity } from './job-apply.entity';
 
-export class CompanyDto {
+export class JobEntity {
   @ApiProperty({
     required: false,
   })
@@ -8,46 +11,43 @@ export class CompanyDto {
   @ApiProperty({
     required: false,
   })
-  displayName: string;
+  jobTitle: string;
   @ApiProperty({
     required: false,
   })
-  address: string;
+  experience: string;
   @ApiProperty({
     required: false,
   })
-  logoUrl: string;
+  salary: string;
   @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  imageUrl: string | null;
-  @ApiProperty({
+    isArray: true,
     required: false,
   })
-  email: string;
+  skills: string[];
   @ApiProperty({
     required: false,
   })
-  phoneNumber: string;
-  @ApiProperty({
-    required: false,
-  })
-  fieldOfActivity: string;
-  @ApiProperty({
-    required: false,
-  })
-  scale: string;
+  jobType: string;
   @ApiProperty({
     required: false,
     nullable: true,
   })
-  description: string | null;
+  education: string | null;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  deadline: Date;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
-  website: string | null;
+  description: string;
+  @ApiProperty({
+    required: false,
+  })
+  status: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -67,4 +67,25 @@ export class CompanyDto {
     nullable: true,
   })
   deletedAt: Date | null;
+  @ApiProperty({
+    required: false,
+  })
+  userId: string;
+  @ApiProperty({
+    required: false,
+  })
+  user?: UserEntity;
+  @ApiProperty({
+    required: false,
+  })
+  companyId: string;
+  @ApiProperty({
+    required: false,
+  })
+  company?: CompanyEntity;
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  jobApply?: JobApplyEntity[];
 }

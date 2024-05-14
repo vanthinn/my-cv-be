@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CompanyDto {
+export class JobApplyDto {
   @ApiProperty({
     required: false,
   })
@@ -8,20 +8,7 @@ export class CompanyDto {
   @ApiProperty({
     required: false,
   })
-  displayName: string;
-  @ApiProperty({
-    required: false,
-  })
-  address: string;
-  @ApiProperty({
-    required: false,
-  })
-  logoUrl: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  imageUrl: string | null;
+  candidateName: string;
   @ApiProperty({
     required: false,
   })
@@ -29,25 +16,7 @@ export class CompanyDto {
   @ApiProperty({
     required: false,
   })
-  phoneNumber: string;
-  @ApiProperty({
-    required: false,
-  })
-  fieldOfActivity: string;
-  @ApiProperty({
-    required: false,
-  })
-  scale: string;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  description: string | null;
-  @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  website: string | null;
+  status: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

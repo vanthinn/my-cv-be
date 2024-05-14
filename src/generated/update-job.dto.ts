@@ -1,70 +1,58 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateCompanyDto {
+export class UpdateJobDto {
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  displayName?: string;
+  jobTitle?: string;
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  address?: string;
+  experience?: string;
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  logoUrl?: string;
+  salary?: string;
   @ApiProperty({
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  imageUrl?: string | null;
-  @ApiProperty({
+    isArray: true,
     required: false,
   })
   @IsOptional()
-  @IsString()
-  email?: string;
+  @IsArray()
+  @IsString({ each: true })
+  skills?: string[];
   @ApiProperty({
     required: false,
   })
   @IsOptional()
   @IsString()
-  phoneNumber?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  fieldOfActivity?: string;
-  @ApiProperty({
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  scale?: string;
+  jobType?: string;
   @ApiProperty({
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  description?: string | null;
+  education?: string | null;
   @ApiProperty({
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  website?: string | null;
+  description?: string;
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  status?: string;
   @ApiProperty({
     type: 'string',
     format: 'date-time',
