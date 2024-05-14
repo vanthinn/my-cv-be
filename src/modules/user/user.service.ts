@@ -93,4 +93,28 @@ export class UserService {
     });
     this.logger.log('Updated the user records', { user });
   };
+
+  getCVOfUser = async (id: string) => {
+    const cvs = await this.dbContext.cV.findMany({
+      where: { userId: id }, select: {
+        id: true,
+        color: true,
+        fontSize: true,
+        fontStyle: true,
+        title: true,
+        template: true,
+        skills: true,
+        summary: true,
+        state: true,
+        userId: true,
+        certificates: true,
+        language: true,
+        education: true,
+        profile: true,
+        experiences: true,
+      }
+    })
+
+    return cvs;
+  }
 }

@@ -78,5 +78,5 @@ export class UserEntity {
     isArray: true,
     required: false,
   })
-  CVs?: CvEntity[];
+  cvs?: CvEntity[];
 }

@@ -55,5 +55,5 @@ export class RoleEntity {
     isArray: true,
     required: false,
   })
-  Employer?: EmployerEntity[];
+  employers?: EmployerEntity[];
 }

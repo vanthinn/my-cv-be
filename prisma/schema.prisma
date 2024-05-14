@@ -47,7 +47,7 @@ model User {
   // Relation
   roleId String @db.Uuid
   role   Role   @relation(fields: [roleId], references: [id])
-  CVs    CV[]
+  cvs    CV[]
 
   @@unique([email], map: "ixuq_user_email")
   @@map("user")
@@ -66,7 +66,7 @@ model Role {
   //Relation
   users       User[]
   permissions RoleToPermission[]
-  Employer    Employer[]
+  employers   Employer[]
 
   @@map("role")
 }
@@ -119,13 +119,13 @@ model CV {
   deletedAt DateTime @default(now()) @updatedAt @map("deleted_at") @db.Timestamptz(6)
 
   //Relation
-  userId        String          @db.Uuid
-  user          User            @relation(fields: [userId], references: [id])
-  Experience    Experience[]
-  ProfileCV     ProfileCV?
-  Education     Education?
-  Certification Certification[]
-  Language      Language[]
+  userId       String          @db.Uuid
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade, map: "fk_cv_to_user")
+  experiences  Experience[]
+  profile      ProfileCV?
+  education    Education?
+  certificates Certification[]
+  language     Language[]
 
   @@map("cv")
 }
@@ -145,7 +145,7 @@ model ProfileCV {
 
   //Relation
   CVId String @unique @db.Uuid
-  CV   CV     @relation(fields: [CVId], references: [id])
+  CV   CV     @relation(fields: [CVId], references: [id], onDelete: Cascade, map: "fk_cv_to_profileCV")
 
   @@map("profile_cv")
 }
@@ -162,23 +162,23 @@ model Education {
 
   //Relation
   CVId String @unique @db.Uuid
-  CV   CV     @relation(fields: [CVId], references: [id])
+  CV   CV     @relation(fields: [CVId], references: [id], onDelete: Cascade, map: "fk_cv_to_education")
 
   @@map("education")
 }
 
 model Experience {
-  id        String   @id(map: "pk_experience") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
-  position  String   @db.VarChar(100)
-  company   String   @map("company") @db.VarChar(100)
-  location  String   @map("location") @db.VarChar(100)
-  state     Boolean? @db.Boolean
-  startDate DateTime @default(now()) @map("start_date") @db.Timestamptz(6)
-  endDate   DateTime @default(now()) @map("end_date") @db.Timestamptz(6)
+  id        String    @id(map: "pk_experience") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  position  String    @db.VarChar(100)
+  company   String    @map("company") @db.VarChar(100)
+  location  String    @map("location") @db.VarChar(100)
+  state     Boolean?  @db.Boolean
+  startDate DateTime  @default(now()) @map("start_date") @db.Timestamptz(6)
+  endDate   DateTime? @default(now()) @map("end_date") @db.Timestamptz(6)
 
   //Relation
   CVId String @db.Uuid
-  CV   CV     @relation(fields: [CVId], references: [id])
+  CV   CV     @relation(fields: [CVId], references: [id], onDelete: Cascade, map: "fk_cv_to_experience")
 
   @@map("experience")
 }
@@ -190,7 +190,7 @@ model Certification {
 
   //Relation
   CVId String @db.Uuid
-  CV   CV     @relation(fields: [CVId], references: [id])
+  CV   CV     @relation(fields: [CVId], references: [id], onDelete: Cascade, map: "fk_cv_to_certification")
 
   @@map("certification")
 }
@@ -202,7 +202,7 @@ model Language {
 
   //Relation
   CVId String @db.Uuid
-  CV   CV     @relation(fields: [CVId], references: [id])
+  CV   CV     @relation(fields: [CVId], references: [id], onDelete: Cascade, map: "fk_cv_to_language")
 
   @@map("language")
 }
@@ -240,7 +240,7 @@ model Employer {
   // Relation
   roleId  String   @unique @db.Uuid
   role    Role     @relation(fields: [roleId], references: [id])
-  Company Company?
+  company Company?
 
   @@unique([email], map: "ixuq_employer_email")
   @@map("employer")

@@ -62,7 +62,6 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   gender: string;
 
   @ApiPropertyOptional({

@@ -31,12 +31,6 @@ export class AuthController {
     return this.authService.signIn(email, password);
   }
 
-  // @UseGuards(AccessTokenGuard)
-  // @Get('logout')
-  // logout(@Req() req: Request) {
-  //   this.authService.logout(req.user['sub']);
-  // }
-
   // @UseGuards(RefreshTokenGuard)
   // @Get('refresh')
   // refreshTokens(@Req() req: Request) {

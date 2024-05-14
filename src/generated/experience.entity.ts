@@ -33,8 +33,9 @@ export class ExperienceEntity {
     type: 'string',
     format: 'date-time',
     required: false,
+    nullable: true,
   })
-  endDate: Date;
+  endDate: Date | null;
   @ApiProperty({
     required: false,
   })

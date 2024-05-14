@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateExperienceDto {
@@ -21,4 +27,14 @@ export class CreateExperienceDto {
   @IsOptional()
   @IsBoolean()
   state?: boolean;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    default: 'now',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  endDate?: Date;
 }

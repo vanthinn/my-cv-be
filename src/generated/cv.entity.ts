@@ -78,25 +78,25 @@ export class CvEntity {
     isArray: true,
     required: false,
   })
-  Experience?: ExperienceEntity[];
+  experiences?: ExperienceEntity[];
   @ApiProperty({
     required: false,
     nullable: true,
   })
-  ProfileCV?: ProfileCVEntity | null;
+  profile?: ProfileCVEntity | null;
   @ApiProperty({
     required: false,
     nullable: true,
   })
-  Education?: EducationEntity | null;
+  education?: EducationEntity | null;
   @ApiProperty({
     isArray: true,
     required: false,
   })
-  Certification?: CertificationEntity[];
+  certificates?: CertificationEntity[];
   @ApiProperty({
     isArray: true,
     required: false,
   })
-  Language?: LanguageEntity[];
+  language?: LanguageEntity[];
 }

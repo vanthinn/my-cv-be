@@ -73,5 +73,5 @@ export class EmployerEntity {
     required: false,
     nullable: true,
   })
-  Company?: CompanyEntity | null;
+  company?: CompanyEntity | null;
 }

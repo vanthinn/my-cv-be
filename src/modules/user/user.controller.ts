@@ -40,4 +40,13 @@ export class UserController {
     return this.userService.updateUser(id, user);
   }
 
+  @ApiOperation({
+    description: 'Get cv a user',
+  })
+  @Get("cv")
+  @HttpCode(HttpStatus.OK)
+  async getCvOfUser(@ReqUser() user: RequestUser) {
+    return this.userService.getCVOfUser(user.id);
+  }
+
 }
