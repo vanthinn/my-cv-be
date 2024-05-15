@@ -8,6 +8,8 @@ import { RoleModule } from './modules/role';
 import { CVModule } from './modules/cv';
 import { CompanyModule } from './modules/company';
 import { JobOfferModule } from './modules/jobOffer';
+import { JobApplyModule } from './modules/jobApply';
+import { CloudinaryModule } from './modules/cloudinary';
 
 @Module({
   imports: [
@@ -19,7 +21,9 @@ import { JobOfferModule } from './modules/jobOffer';
     RoleModule,
     CVModule,
     CompanyModule,
-    JobOfferModule
+    JobOfferModule,
+    JobApplyModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
   providers: [AppService],

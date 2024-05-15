@@ -82,7 +82,7 @@ export class AuthService {
   async getTokens(userData: getUsersPayload) {
     const user = {
       email: userData.email,
-      full: userData.firstName + ' ' + userData.lastName,
+      fullName: userData.firstName + ' ' + userData.lastName,
       role: userData.roleId,
       avatarUrl: userData.avatarUrl,
     };

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AccessTokenGuard } from "src/guard";
 import { JobOfferService } from "./jobOffer.service";
@@ -7,11 +7,19 @@ import { ReqUser } from "src/common/decorator/request-user.decorator";
 import { CreateJobOfferDto } from "./dto/createJobOffer.dto";
 import { UpdateJobOfferDto } from "./dto/updateJobOffer.dto";
 import { UUIDParam } from "src/common/types/uuid-param";
+import { query } from "express";
+import { GetAllJobOfferDto } from "./dto/getAllJobOffers.dto";
 
 @ApiTags('Job-offer')
 @Controller('job-offer')
 export class JobOfferController {
     constructor(private readonly JobOfferService: JobOfferService) { }
+
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    async getAllJobOffers(@ReqUser() user: RequestUser, @Query() query: GetAllJobOfferDto) {
+        return this.JobOfferService.getAllJobOffers(user, query)
+    }
 
     @UseGuards(AccessTokenGuard)
     @ApiBearerAuth()

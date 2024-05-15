@@ -46,7 +46,7 @@ export class UserController {
   @Get("cv")
   @HttpCode(HttpStatus.OK)
   async getCvOfUser(@ReqUser() user: RequestUser) {
-    return this.userService.getCVOfUser(user.id);
+    return this.userService.getAllCVOfUser(user.id);
   }
 
 }

@@ -13,8 +13,6 @@ import { UUIDParam } from 'src/common/types/uuid-param';
 export class CompanyController {
     constructor(private readonly CompanyService: CompanyService) { }
 
-
-
     @UseGuards(AccessTokenGuard)
     @ApiBearerAuth()
     @Post()

@@ -50,7 +50,6 @@ export class UserService {
   }
 
   findUserById = async (id: string) => {
-    console.log(id)
     const user = await this.dbContext.user.findUnique({
       where: { id: id }, select: {
         id: true,
@@ -104,7 +103,7 @@ export class UserService {
     this.logger.log('Updated the company user', { user });
   }
 
-  getCVOfUser = async (id: string) => {
+  getAllCVOfUser = async (id: string) => {
     const cvs = await this.dbContext.cV.findMany({
       where: { userId: id }, select: {
         id: true,
@@ -126,5 +125,29 @@ export class UserService {
     })
 
     return cvs;
+  }
+
+  getCVMainOfUser = async (id: string) => {
+    const cv = await this.dbContext.cV.findFirst({
+      where: { userId: id, state: true }, select: {
+        id: true,
+        color: true,
+        fontSize: true,
+        fontStyle: true,
+        title: true,
+        template: true,
+        skills: true,
+        summary: true,
+        state: true,
+        userId: true,
+        certificates: true,
+        language: true,
+        education: true,
+        profile: true,
+        experiences: true,
+      }
+    })
+
+    return cv;
   }
 }

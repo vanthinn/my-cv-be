@@ -29,6 +29,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tenant {
+  id    String @id(map: "pk_tenant") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code  String @map("display_name") @db.VarChar(50)
+  users User[]
+
+  @@unique([code], map: "ixuq_code")
+}
+
 model User {
   id           String    @id(map: "pk_user") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -47,12 +55,14 @@ model User {
   // Relation
   roleId    String   @db.Uuid
   role      Role     @relation(fields: [roleId], references: [id])
+  tenantId  String   @db.Uuid
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
   cvs       CV[]
   companyId String?  @db.Uuid
   company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_user_to_company")
   jobs      Job[]
 
-  @@unique([email], map: "ixuq_user_email")
+  @@unique([email, tenantId], map: "ixuq_user_email")
   @@map("user")
 }
 
