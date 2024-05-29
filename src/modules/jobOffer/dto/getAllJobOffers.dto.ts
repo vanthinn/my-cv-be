@@ -41,6 +41,20 @@ export class GetAllJobOfferDto {
     @Min(1)
     take: number = 10;
 
+    @ApiPropertyOptional({
+        description: '',
+    })
+    @IsOptional()
+    @IsString()
+    companyId?: string;
+
+    @ApiPropertyOptional({
+        description: '',
+    })
+    @IsOptional()
+    @IsString()
+    userId?: string;
+
     @ApiPropertyOptional({})
     @IsOptional()
     @IsString()

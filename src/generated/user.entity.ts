@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleEntity } from './role.entity';
+import { TenantEntity } from './tenant.entity';
 import { CvEntity } from './cv.entity';
 import { CompanyEntity } from './company.entity';
 import { JobEntity } from './job.entity';
+import { JobBookmarkEntity } from './job-bookmark.entity';
 
 export class UserEntity {
   @ApiProperty({
@@ -77,6 +79,14 @@ export class UserEntity {
   })
   role?: RoleEntity;
   @ApiProperty({
+    required: false,
+  })
+  tenantId: string;
+  @ApiProperty({
+    required: false,
+  })
+  tenant?: TenantEntity;
+  @ApiProperty({
     isArray: true,
     required: false,
   })
@@ -96,4 +106,9 @@ export class UserEntity {
     required: false,
   })
   jobs?: JobEntity[];
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  jobBookmarks?: JobBookmarkEntity[];
 }

@@ -38,6 +38,11 @@ export class ExperienceEntity {
   endDate: Date | null;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  description: string | null;
+  @ApiProperty({
+    required: false,
   })
   CVId: string;
   @ApiProperty({

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { query } from 'express';
 import { AccessTokenGuard } from 'src/guard';
@@ -7,10 +7,10 @@ import { UserService } from './user.service';
 import { RequestUser } from 'src/common';
 import { ReqUser } from 'src/common/decorator/request-user.decorator';
 import { UUIDParam } from 'src/common/types/uuid-param';
-@ApiTags('User')
+@ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(AccessTokenGuard)
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
@@ -35,9 +35,19 @@ export class UserController {
     description: 'Update a user',
   })
   @Put(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  // @HttpCode(HttpStatus.NO_CONTENT)
   async update(@Param() { id }: UUIDParam, @Body() user: UpdateUserDto) {
     return this.userService.updateUser(id, user);
+  }
+
+  @Get('job-apply/history')
+  async getJobApplyHistory(@ReqUser() user: RequestUser) {
+    return this.userService.getAllJobApplyOfUser(user)
+  }
+
+  @Patch('company')
+  async updateUserCompany(@ReqUser() user: RequestUser, @Body() { id }: UUIDParam) {
+    return this.userService.updateUserCompany(user.id, id);
   }
 
   @ApiOperation({

@@ -37,4 +37,11 @@ export class CreateExperienceDto {
   @IsOptional()
   @IsDateString()
   endDate?: Date;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
 }

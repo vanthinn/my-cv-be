@@ -35,4 +35,9 @@ export class ExperienceDto {
     nullable: true,
   })
   endDate: Date | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  description: string | null;
 }

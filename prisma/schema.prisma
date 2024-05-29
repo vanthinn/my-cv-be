@@ -45,7 +45,7 @@ model User {
   lastName     String    @map("last_name") @db.VarChar(100)
   email        String    @map("email") @db.VarChar(255)
   password     String    @map("password")
-  avatarUrl    String?   @map("avatar_url") @db.VarChar(50)
+  avatarUrl    String?   @map("avatar_url") @db.VarChar(5000)
   phoneNumber  String    @map("phone_number") @db.VarChar(10)
   gender       String?   @map("gender") @db.VarChar(20)
   dateOfBirth  DateTime? @default(now()) @map("date_of_birth") @db.Timestamptz(6)
@@ -53,14 +53,15 @@ model User {
   refreshToken String?   @map("refresh_token") @db.VarChar(100)
 
   // Relation
-  roleId    String   @db.Uuid
-  role      Role     @relation(fields: [roleId], references: [id])
-  tenantId  String   @db.Uuid
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
-  cvs       CV[]
-  companyId String?  @db.Uuid
-  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_user_to_company")
-  jobs      Job[]
+  roleId       String        @db.Uuid
+  role         Role          @relation(fields: [roleId], references: [id])
+  tenantId     String        @db.Uuid
+  tenant       Tenant        @relation(fields: [tenantId], references: [id])
+  cvs          CV[]
+  companyId    String?       @db.Uuid
+  company      Company?      @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_user_to_company")
+  jobs         Job[]
+  jobBookmarks JobBookmark[]
 
   @@unique([email, tenantId], map: "ixuq_user_email")
   @@map("user")
@@ -117,18 +118,20 @@ model RoleToPermission {
 }
 
 model CV {
-  id        String   @id(map: "pk_cv") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
-  template  String   @db.VarChar(50)
-  title     String   @db.VarChar(50)
-  fontStyle String?  @map("font_style") @db.VarChar(50)
-  fontSize  String?  @map("font_size") @db.VarChar(50)
-  color     String?  @map("color") @db.VarChar(50)
-  skills    String[] @db.VarChar(500)
-  summary   String?  @map("summary") @db.VarChar(1000)
-  state     Boolean  @db.Boolean
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  deletedAt DateTime @default(now()) @updatedAt @map("deleted_at") @db.Timestamptz(6)
+  id        String    @id(map: "pk_cv") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  template  String    @db.VarChar(50)
+  image     String?   @db.VarChar(500)
+  title     String    @db.VarChar(50)
+  fontStyle String?   @map("font_style") @db.VarChar(50)
+  fontSize  String?   @map("font_size") @db.VarChar(50)
+  color     String?   @map("color") @db.VarChar(50)
+  skills    String[]  @db.VarChar(500)
+  interests String[]  @db.VarChar(500)
+  summary   String?   @map("summary") @db.VarChar(1000)
+  state     Boolean   @db.Boolean
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
 
   //Relation
   userId       String          @db.Uuid
@@ -137,7 +140,7 @@ model CV {
   profile      ProfileCV?
   education    Education?
   certificates Certification[]
-  language     Language[]
+  languages    Language[]
   jobApply     JobApply[]
 
   @@map("cv")
@@ -169,7 +172,7 @@ model Education {
   location     String   @map("location") @db.VarChar(100)
   state        String   @map("state") @db.VarChar(100)
   fieldOfStudy String   @map("field_of_study") @db.VarChar
-  GPA          String?  @map("gpa") @db.VarChar(5)
+  GPA          Decimal? @map("gpa") @db.Decimal(4, 2)
   startDate    DateTime @default(now()) @map("start_date") @db.Timestamptz(6)
   endDate      DateTime @default(now()) @map("end_date") @db.Timestamptz(6)
 
@@ -181,13 +184,14 @@ model Education {
 }
 
 model Experience {
-  id        String    @id(map: "pk_experience") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
-  position  String    @db.VarChar(100)
-  company   String    @map("company") @db.VarChar(100)
-  location  String    @map("location") @db.VarChar(100)
-  state     Boolean?  @db.Boolean
-  startDate DateTime  @default(now()) @map("start_date") @db.Timestamptz(6)
-  endDate   DateTime? @default(now()) @map("end_date") @db.Timestamptz(6)
+  id          String    @id(map: "pk_experience") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  position    String    @db.VarChar(100)
+  company     String    @map("company") @db.VarChar(100)
+  location    String    @map("location") @db.VarChar(100)
+  state       Boolean?  @db.Boolean
+  startDate   DateTime  @default(now()) @map("start_date") @db.Timestamptz(6)
+  endDate     DateTime? @default(now()) @map("end_date") @db.Timestamptz(6)
+  description String?   @map("description") @db.VarChar(1000)
 
   //Relation
   CVId String @db.Uuid
@@ -252,7 +256,7 @@ model Job {
   jobType     String    @db.VarChar(50)
   education   String?   @db.VarChar(50)
   deadline    DateTime  @default(now()) @map("deadline") @db.Timestamptz(6)
-  description String    @db.VarChar(1000)
+  description String    @db.VarChar(20000)
   status      String    @db.VarChar(50)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -264,7 +268,8 @@ model Job {
   companyId String  @db.Uuid
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_job_to_company")
 
-  jobApply JobApply[]
+  jobApply     JobApply[]
+  jobBookmarks JobBookmark[]
 
   @@map("job")
 }
@@ -286,4 +291,19 @@ model JobApply {
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
 
   @@map("job_apply")
+}
+
+model JobBookmark {
+  id        String    @id(map: "pk_job_bookmarks") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  jobId String @db.Uuid
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade, map: "fk_job_to_job_bookmarks")
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "fk_user_to_job_bookmarks")
+
+  @@map("job_bookmark")
 }

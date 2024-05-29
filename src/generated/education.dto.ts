@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class EducationDto {
@@ -22,10 +23,12 @@ export class EducationDto {
   })
   fieldOfStudy: string;
   @ApiProperty({
+    type: 'number',
+    format: 'double',
     required: false,
     nullable: true,
   })
-  GPA: string | null;
+  GPA: Prisma.Decimal | null;
   @ApiProperty({
     type: 'string',
     format: 'date-time',

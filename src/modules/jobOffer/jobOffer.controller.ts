@@ -7,7 +7,6 @@ import { ReqUser } from "src/common/decorator/request-user.decorator";
 import { CreateJobOfferDto } from "./dto/createJobOffer.dto";
 import { UpdateJobOfferDto } from "./dto/updateJobOffer.dto";
 import { UUIDParam } from "src/common/types/uuid-param";
-import { query } from "express";
 import { GetAllJobOfferDto } from "./dto/getAllJobOffers.dto";
 
 @ApiTags('Job-offer')
@@ -19,6 +18,12 @@ export class JobOfferController {
     @HttpCode(HttpStatus.OK)
     async getAllJobOffers(@ReqUser() user: RequestUser, @Query() query: GetAllJobOfferDto) {
         return this.JobOfferService.getAllJobOffers(user, query)
+    }
+
+    @Get('/job-detail')
+    @HttpCode(HttpStatus.OK)
+    async getJobOfferById(@ReqUser() user: RequestUser, @Query() query: { jobId: string, userId: string }) {
+        return this.JobOfferService.findJobOfferById(user, query)
     }
 
     @UseGuards(AccessTokenGuard)

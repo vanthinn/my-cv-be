@@ -1,4 +1,10 @@
-import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCvDto {
@@ -8,6 +14,13 @@ export class UpdateCvDto {
   @IsOptional()
   @IsString()
   template?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  image?: string | null;
   @ApiProperty({
     required: false,
   })
@@ -44,6 +57,14 @@ export class UpdateCvDto {
   @IsString({ each: true })
   skills?: string[];
   @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  interests?: string[];
+  @ApiProperty({
     required: false,
     nullable: true,
   })
@@ -56,4 +77,13 @@ export class UpdateCvDto {
   @IsOptional()
   @IsBoolean()
   state?: boolean;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  deletedAt?: Date | null;
 }

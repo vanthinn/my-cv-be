@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "src/database/services";
 import { CreateCVDto } from "./dto/createCV.dto";
 import { RequestUser } from "src/common";
@@ -6,7 +6,7 @@ import { createLanguageDto } from "./dto/createLangue.dto";
 import { createCertificationDto } from "./dto/createCertification.dto";
 import { createExperienceDto } from "./dto/creatExperience.dto";
 import { UpdateCVDto } from "./dto/updateCV.dto";
-import e from "express";
+
 
 @Injectable()
 export class CVService {
@@ -14,27 +14,56 @@ export class CVService {
 
     private readonly logger: Logger = new Logger(CVService.name);
 
-    async createCV(user: RequestUser, data: CreateCVDto) {
-        const { education, profile, languages, certifications, experiences, ...other } = data
-        const cv = await this.dbContext.cV.create({
-            data: { ...other, userId: user.id },
-        });
+    async getCVById(user: RequestUser, id: string) {
+        const cv = await this.dbContext.cV.findUnique({
+            where: { id }, select: {
+                id: true,
+                fontSize: true,
+                fontStyle: true,
+                image: true,
+                template: true,
+                title: true,
+                color: true,
+                profile: true,
+                education: true,
+                certificates: true,
+                createdAt: true,
+                updatedAt: true,
+                experiences: true,
+                state: true,
+                languages: true,
+                skills: true,
+                interests: true,
+                summary: true,
 
+            }
+        })
+        return cv
+    }
+
+    async createCV(user: RequestUser, data: CreateCVDto) {
+        const { education, profile, languages, certificates, experiences, ...other } = data
+
+        const checkCV = await this.dbContext.cV.findFirst({ where: { userId: user.id } })
+
+        const cv = await this.dbContext.cV.create({
+            data: { ...other, userId: user.id, state: checkCV ? false : true },
+        });
 
 
         const educationCV = await this.dbContext.education.create({
             data: {
                 ...education,
                 CVId: cv.id,
-                startDate: new Date(education.startDate).toISOString(),
-                endDate: new Date(education.endDate).toISOString()
+                startDate: new Date(education.startDate),
+                endDate: new Date(education.endDate)
             }
         })
 
         const projectCV = await this.dbContext.profileCV.create({
             data: {
                 ...profile,
-                dateOfBirth: new Date(profile.dateOfBirth).toISOString(),
+                dateOfBirth: new Date(profile.dateOfBirth),
                 CVId: cv.id
             }
         })
@@ -48,8 +77,8 @@ export class CVService {
             const language = await this.dbContext.language.createMany({ data: createManyLanguage })
         }
 
-        if (certifications && certifications.length > 0) {
-            const createManyCertification = certifications.map((certification: createCertificationDto) => ({
+        if (certificates && certificates.length > 0) {
+            const createManyCertification = certificates.map((certification: createCertificationDto) => ({
                 displayName: certification.displayName,
                 date: new Date(certification.date),
                 CVId: cv.id,
@@ -59,6 +88,7 @@ export class CVService {
         }
 
         if (experiences && experiences.length > 0) {
+
             const createManyExperience = experiences.map((experience: createExperienceDto) => ({
                 ...experience,
                 startDate: new Date(experience.startDate),
@@ -66,13 +96,17 @@ export class CVService {
                 CVId: cv.id
             }))
 
+            console.log(createManyExperience)
+
             const experience = await this.dbContext.experience.createMany({ data: createManyExperience })
         }
+
+        return cv
 
     }
 
     async updateCV(user: RequestUser, id: string, data: UpdateCVDto) {
-        const { profile, education, experiences, languages, certifications, ...other } = data
+        const { profile, education, experiences, languages, certificates, ...other } = data
 
         await this.dbContext.$transaction(async (tx) => {
             await tx.experience.deleteMany({ where: { CVId: id } })
@@ -97,8 +131,8 @@ export class CVService {
             }
 
             await tx.certification.deleteMany({ where: { CVId: id } })
-            if (certifications && certifications.length > 0) {
-                const createManyCertification = certifications.map((certification: createCertificationDto) => ({
+            if (certificates && certificates.length > 0) {
+                const createManyCertification = certificates.map((certification: createCertificationDto) => ({
                     displayName: certification.displayName,
                     date: new Date(certification.date),
                     CVId: id,
@@ -130,14 +164,36 @@ export class CVService {
         this.logger.log('Update the cv records', {});
     }
 
-    async deleteCVById(id: string) {
+    async deleteCVById(user: RequestUser, id: string) {
+        const cv = await this.getCVById(user, id)
+        if (cv.state) {
+            throw new BadRequestException('Main CV do not deleted');
+        }
+
         const deleteCV = await this.dbContext.cV.delete({ where: { id } })
         this.logger.log('Deleted the cv records', { deleteCV });
     }
 
     async patchCVById(user: RequestUser, id: string, data: UpdateCVDto) {
-        const { profile, education, experiences, languages, certifications, ...other } = data
-        const updateCV = await this.dbContext.cV.update({ where: { id }, data: { ...other } })
+        const { profile, education, experiences, languages, certificates, ...other } = data
+
+        await this.dbContext.$transaction(async (tx) => {
+            if (other.state) {
+                await tx.cV.updateMany({
+                    where: {
+                        userId: user.id,
+                    },
+                    data: {
+                        state: false,
+                    },
+                });
+            }
+            const updateCV = await tx.cV.update({
+                where: { id },
+                data: { ...other },
+            });
+        })
+
     }
 }
 

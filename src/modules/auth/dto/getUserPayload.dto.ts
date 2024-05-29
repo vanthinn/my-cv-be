@@ -8,6 +8,7 @@ export type getUsersPayload = Prisma.UserGetPayload<{
         firstName: true;
         lastName: true;
         avatarUrl: true;
-        roleId: true
+        roleId: true;
+        tenantId: true;
     };
 }>;

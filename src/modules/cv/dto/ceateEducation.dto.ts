@@ -1,5 +1,26 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+
+export function IsGPA(validationOptions?: ValidationOptions) {
+    return function (object: Object, propertyName: string) {
+        registerDecorator({
+            name: 'isGPA',
+            target: object.constructor,
+            propertyName: propertyName,
+            options: validationOptions,
+            validator: {
+                validate(value: any, args: ValidationArguments) {
+                    if (value === null || value === undefined) return true;
+                    return typeof value === 'number' && value >= 0 && value <= 4 && /^\d+(\.\d{1,2})?$/.test(value.toString());
+                },
+                defaultMessage(args: ValidationArguments) {
+                    return `${args.property} must be a number between 0 and 4 with up to two decimal places`;
+                }
+            },
+        });
+    };
+}
 
 export class createEducationDto {
     @ApiProperty({
@@ -31,11 +52,13 @@ export class createEducationDto {
     fieldOfStudy: string;
 
     @ApiProperty({
-        description: 'username of the user',
+        description: 'GPA of the user',
+        type: Number,
     })
     @IsOptional()
-    @IsString()
-    GPA?: string;
+    @IsNumber()
+    @IsGPA()
+    GPA?: number;
 
     @ApiProperty({
         description: 'username of the user',

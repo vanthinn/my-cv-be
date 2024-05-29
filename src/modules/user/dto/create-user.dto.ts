@@ -53,7 +53,6 @@ export class CreateUserDto {
     description: 'Date of birth',
   })
   @IsOptional()
-  @IsISO8601()
   @IsNotEmpty()
   avatarUrl: string;
 
@@ -84,6 +83,15 @@ export class CreateUserDto {
     description: 'Role names',
     example: [UserRole.ADMIN],
   })
+  @IsOptional()
   @IsString()
   roleId: string;
+
+  @ApiProperty({
+    description: 'Role names',
+    example: [UserRole.ADMIN],
+  })
+  @IsOptional()
+  @IsString()
+  tenantId: string;
 }

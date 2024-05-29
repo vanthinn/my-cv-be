@@ -1,3 +1,8 @@
+export * from './connect-tenant.dto';
+export * from './create-tenant.dto';
+export * from './update-tenant.dto';
+export * from './tenant.entity';
+export * from './tenant.dto';
 export * from './connect-user.dto';
 export * from './create-user.dto';
 export * from './update-user.dto';
@@ -63,3 +68,8 @@ export * from './create-job-apply.dto';
 export * from './update-job-apply.dto';
 export * from './job-apply.entity';
 export * from './job-apply.dto';
+export * from './connect-job-bookmark.dto';
+export * from './create-job-bookmark.dto';
+export * from './update-job-bookmark.dto';
+export * from './job-bookmark.entity';
+export * from './job-bookmark.dto';

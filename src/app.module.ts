@@ -10,6 +10,8 @@ import { CompanyModule } from './modules/company';
 import { JobOfferModule } from './modules/jobOffer';
 import { JobApplyModule } from './modules/jobApply';
 import { CloudinaryModule } from './modules/cloudinary';
+import { TenantModule } from './modules/tenant';
+import { BookmarkModule } from './modules/bookmark';
 
 @Module({
   imports: [
@@ -23,7 +25,10 @@ import { CloudinaryModule } from './modules/cloudinary';
     CompanyModule,
     JobOfferModule,
     JobApplyModule,
-    CloudinaryModule
+    CloudinaryModule,
+    TenantModule,
+    CompanyModule,
+    BookmarkModule
   ],
   controllers: [AppController],
   providers: [AppService],

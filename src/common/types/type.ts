@@ -9,6 +9,7 @@ export type RequestUser = {
   id: string;
   fullName: string;
   email: string;
+  tenantId: string;
   roleId: string[];
   session: string;
   avatarUrl: string | null;

@@ -18,8 +18,8 @@ export class AuthService {
     private configService: ConfigService,
   ) { }
 
-  signIn = async (email: string, password: string) => {
-    const user = await this.userService.findUserByEmail(email);
+  signIn = async (email: string, password: string, tenantId: string) => {
+    const user = await this.userService.findUserByEmail(email, tenantId);
 
     if (!user) throw new BadRequestException('User does not exist');
 
@@ -28,13 +28,13 @@ export class AuthService {
     if (!passwordMatches)
       throw new BadRequestException('Password is incorrect');
     const tokens = await this.getTokens(user);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    // await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   };
 
   signUp = async (createUserDto: CreateUserDto) => {
     const userExists = await this.userService.findUserByEmail(
-      createUserDto.email,
+      createUserDto.email, createUserDto.tenantId
     );
     if (userExists) {
       throw new BadRequestException('User already exists');
@@ -46,7 +46,7 @@ export class AuthService {
       password: hash,
     });
     const tokens = await this.getTokens(newUser);
-    await this.updateRefreshToken(newUser.id, tokens.refreshToken);
+    // await this.updateRefreshToken(newUser.id, tokens.refreshToken);
     return tokens;
   };
 
@@ -54,12 +54,12 @@ export class AuthService {
   //   return this.userService.updateUser(userId, { refreshToken: null });
   // }
 
-  async updateRefreshToken(userId: string, refreshToken: string) {
-    const hashedRefreshToken = await hashPassword(refreshToken);
-    await this.userService.updateUser(userId, {
-      refreshToken: hashedRefreshToken,
-    });
-  }
+  // async updateRefreshToken(userId: string, refreshToken: string) {
+  //   const hashedRefreshToken = await hashPassword(refreshToken);
+  //   await this.userService.updateUser(userId, {
+  //     refreshToken: hashedRefreshToken,
+  //   });
+  // }
 
   // async refreshTokens(userId: string, refreshToken: string) {
   //   const user = await this.userService.findUserById(userId);
@@ -85,6 +85,7 @@ export class AuthService {
       fullName: userData.firstName + ' ' + userData.lastName,
       role: userData.roleId,
       avatarUrl: userData.avatarUrl,
+      tenantId: userData.tenantId
     };
 
     const [accessToken, refreshToken] = await Promise.all([

@@ -27,8 +27,8 @@ export class AuthController {
 
   @Post('login')
   login(@Body() data: LoginCredentialDto) {
-    const { email, password } = data;
-    return this.authService.signIn(email, password);
+    const { email, password, tenantId } = data;
+    return this.authService.signIn(email, password, tenantId);
   }
 
   // @UseGuards(RefreshTokenGuard)

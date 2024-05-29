@@ -1,5 +1,5 @@
 import { CompanyService } from './company.service';
-import { Body, Controller, Delete, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AccessTokenGuard } from "src/guard";
 import { CreateCompanyDto } from './dto/createCompanyDto.dto';
@@ -7,11 +7,24 @@ import { ReqUser } from 'src/common/decorator/request-user.decorator';
 import { RequestUser } from 'src/common';
 import { UpdateCompanyDto } from './dto/updateCompanyDto.dto';
 import { UUIDParam } from 'src/common/types/uuid-param';
+import { getALLCompanyDto } from './dto/getAllCompanyDto.dto';
 
 @ApiTags('Company')
 @Controller('company')
 export class CompanyController {
     constructor(private readonly CompanyService: CompanyService) { }
+
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    async getAllCompany(@ReqUser() user: RequestUser, @Query() query: getALLCompanyDto) {
+        return this.CompanyService.getAllCompany(user, query)
+    }
+
+    @Get(":id")
+    @HttpCode(HttpStatus.OK)
+    async getCompanyById(@ReqUser() user: RequestUser, @Param() { id }: UUIDParam) {
+        return this.CompanyService.findCompanyById(id)
+    }
 
     @UseGuards(AccessTokenGuard)
     @ApiBearerAuth()

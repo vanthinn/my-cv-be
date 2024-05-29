@@ -17,4 +17,12 @@ export class LoginCredentialDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty({
+    description: 'Password of the user',
+    example: '123456',
+  })
+  @IsString()
+  @IsNotEmpty()
+  tenantId: string;
 }

@@ -18,6 +18,11 @@ export class CvEntity {
   template: string;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  image: string | null;
+  @ApiProperty({
+    required: false,
   })
   title: string;
   @ApiProperty({
@@ -40,6 +45,11 @@ export class CvEntity {
     required: false,
   })
   skills: string[];
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  interests: string[];
   @ApiProperty({
     required: false,
     nullable: true,
@@ -65,8 +75,9 @@ export class CvEntity {
     type: 'string',
     format: 'date-time',
     required: false,
+    nullable: true,
   })
-  deletedAt: Date;
+  deletedAt: Date | null;
   @ApiProperty({
     required: false,
   })
@@ -99,7 +110,7 @@ export class CvEntity {
     isArray: true,
     required: false,
   })
-  language?: LanguageEntity[];
+  languages?: LanguageEntity[];
   @ApiProperty({
     isArray: true,
     required: false,

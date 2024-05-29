@@ -11,6 +11,11 @@ export class CvDto {
   template: string;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  image: string | null;
+  @ApiProperty({
+    required: false,
   })
   title: string;
   @ApiProperty({
@@ -33,6 +38,11 @@ export class CvDto {
     required: false,
   })
   skills: string[];
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  interests: string[];
   @ApiProperty({
     required: false,
     nullable: true,
@@ -58,6 +68,7 @@ export class CvDto {
     type: 'string',
     format: 'date-time',
     required: false,
+    nullable: true,
   })
-  deletedAt: Date;
+  deletedAt: Date | null;
 }

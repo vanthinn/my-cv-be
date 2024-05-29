@@ -65,7 +65,14 @@ export class CreateCVDto {
     })
     @IsOptional()
     @IsString()
-    interest?: string;
+    image?: string;
+
+    @ApiProperty({
+        description: 'username of the user',
+    })
+    @IsOptional()
+    @IsArray()
+    interests?: string[];
 
 
     @ApiProperty({
@@ -98,5 +105,5 @@ export class CreateCVDto {
     @IsOptional()
     @ValidateNested()
     @Type(() => Array<createCertificationDto>)
-    certifications: createCertificationDto[]
+    certificates: createCertificationDto[]
 }

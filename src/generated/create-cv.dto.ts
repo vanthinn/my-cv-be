@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -12,6 +13,13 @@ export class CreateCvDto {
   @IsNotEmpty()
   @IsString()
   template: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  image?: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -45,6 +53,13 @@ export class CreateCvDto {
   @IsString({ each: true })
   skills: string[];
   @ApiProperty({
+    isArray: true,
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @IsString({ each: true })
+  interests: string[];
+  @ApiProperty({
     required: false,
     nullable: true,
   })
@@ -55,4 +70,13 @@ export class CreateCvDto {
   @IsNotEmpty()
   @IsBoolean()
   state: boolean;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  deletedAt?: Date;
 }

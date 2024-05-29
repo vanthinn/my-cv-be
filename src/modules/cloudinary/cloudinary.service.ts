@@ -19,6 +19,7 @@ export class CloudinaryService {
 
                     toStream(file.buffer).pipe(upload);
                 }).catch((error) => {
+                    console.log(error)
                     throw new BadRequestException('Cant upload file');
                 });
             }),

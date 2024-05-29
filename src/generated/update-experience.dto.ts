@@ -37,4 +37,11 @@ export class UpdateExperienceDto {
   @IsOptional()
   @IsDateString()
   endDate?: Date | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string | null;
 }

@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Prisma } from '@prisma/client';
+import { IsDecimal, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEducationDto {
@@ -19,10 +20,12 @@ export class CreateEducationDto {
   @IsString()
   fieldOfStudy: string;
   @ApiProperty({
+    type: 'number',
+    format: 'double',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsString()
-  GPA?: string;
+  @IsDecimal()
+  GPA?: Prisma.Decimal;
 }
