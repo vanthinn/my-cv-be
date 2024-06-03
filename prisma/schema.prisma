@@ -228,14 +228,14 @@ model Language {
 model Company {
   id              String    @id(map: "pk_company") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
   displayName     String    @map("display_name") @db.VarChar(50)
-  address         String    @db.VarChar(50)
+  address         String    @db.VarChar(500)
   logoUrl         String    @db.VarChar(500)
   imageUrl        String?   @db.VarChar(500)
   email           String    @db.VarChar(50)
   phoneNumber     String    @map("phone_number") @db.VarChar(50)
   fieldOfActivity String    @map("filed_of_activity") @db.VarChar(50)
   scale           String    @map("scale") @db.VarChar(100)
-  description     String?   @map("description") @db.VarChar(1000)
+  description     String?   @map("description") @db.VarChar(20000)
   website         String?   @map("website") @db.VarChar(50)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)

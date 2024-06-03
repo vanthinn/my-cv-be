@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@brakebein/prisma-generator-nestjs-dto": "1.16",
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^9.0.0",
