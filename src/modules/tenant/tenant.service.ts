@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { RequestUser } from "src/common";
 import { PrismaService } from "src/database/services";
 
 @Injectable()
@@ -16,6 +17,15 @@ export class TenantService {
 
     async getTenantById(id: string) {
         const tenant = await this.dbContext.tenant.findUnique({ where: { id: id } })
+        return tenant
+    }
+
+    async getCurrentTenant(user: RequestUser) {
+        const tenant = await this.dbContext.tenant.findUnique({ where: { id: user.tenantId } })
+        if (!tenant) {
+            throw new NotFoundException('Not found tenant')
+        }
+
         return tenant
     }
 }

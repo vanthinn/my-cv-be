@@ -8,6 +8,8 @@ import { RoleService } from '../role';
 import { Prisma } from '@prisma/client';
 import { TenantService } from '../tenant';
 import { RequestUser } from 'src/common';
+import { searchByMode } from 'src/common/utils/prisma';
+import { UserRole } from 'src/common/types/enum';
 
 @Injectable()
 export class UserService {
@@ -129,11 +131,51 @@ export class UserService {
   }
 
   getAllUsers = async ({ search, skip, take }: GetUsersQueryDto) => {
+    const whereConditions: Prisma.Enumerable<Prisma.UserWhereInput> = [{
+      role: {
+        name: {
+          not: UserRole.ADMIN
+        }
+      }
+    }];
+    if (search) {
+      whereConditions.push({
+        OR: [
+          { firstName: searchByMode(search) },
+          { lastName: searchByMode(search) }
+        ]
+      });
+    }
+
     const [total, users] = await Promise.all([
-      this.dbContext.user.count({}),
+      this.dbContext.user.count({
+        where: {
+          AND: whereConditions,
+
+        },
+      }),
       this.dbContext.user.findMany({
+        where: {
+          AND: whereConditions,
+        },
         skip,
         take,
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          address: true,
+          dateOfBirth: true,
+          email: true,
+          gender: true,
+          phoneNumber: true,
+          role: {
+            select: {
+              id: true,
+              name: true,
+            }
+          }
+        }
       }),
     ]);
 

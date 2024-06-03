@@ -31,14 +31,6 @@ export class UserController {
     return this.userService.findUserById(user.id);
   }
 
-  @ApiOperation({
-    description: 'Update a user',
-  })
-  @Put(':id')
-  // @HttpCode(HttpStatus.NO_CONTENT)
-  async update(@Param() { id }: UUIDParam, @Body() user: UpdateUserDto) {
-    return this.userService.updateUser(id, user);
-  }
 
   @Get('job-apply/history')
   async getJobApplyHistory(@ReqUser() user: RequestUser) {
@@ -57,6 +49,24 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async getCvOfUser(@ReqUser() user: RequestUser) {
     return this.userService.getAllCVOfUser(user.id);
+  }
+
+  @ApiOperation({
+    description: 'get current user',
+  })
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getUserById(@ReqUser() user: RequestUser, @Param() { id }: UUIDParam) {
+    return this.userService.findUserById(id);
+  }
+
+  @ApiOperation({
+    description: 'Update a user',
+  })
+  @Put(':id')
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  async update(@Param() { id }: UUIDParam, @Body() user: UpdateUserDto) {
+    return this.userService.updateUser(id, user);
   }
 
 }

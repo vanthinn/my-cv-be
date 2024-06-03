@@ -53,15 +53,16 @@ model User {
   refreshToken String?   @map("refresh_token") @db.VarChar(100)
 
   // Relation
-  roleId       String        @db.Uuid
-  role         Role          @relation(fields: [roleId], references: [id])
-  tenantId     String        @db.Uuid
-  tenant       Tenant        @relation(fields: [tenantId], references: [id])
-  cvs          CV[]
-  companyId    String?       @db.Uuid
-  company      Company?      @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_user_to_company")
-  jobs         Job[]
-  jobBookmarks JobBookmark[]
+  roleId             String               @db.Uuid
+  role               Role                 @relation(fields: [roleId], references: [id])
+  tenantId           String               @db.Uuid
+  tenant             Tenant               @relation(fields: [tenantId], references: [id])
+  cvs                CV[]
+  companyId          String?              @db.Uuid
+  company            Company?             @relation(fields: [companyId], references: [id], onDelete: Cascade, map: "fk_user_to_company")
+  jobs               Job[]
+  jobBookmarks       JobBookmark[]
+  UserToConversation UserToConversation[]
 
   @@unique([email, tenantId], map: "ixuq_user_email")
   @@map("user")
@@ -306,4 +307,55 @@ model JobBookmark {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, map: "fk_user_to_job_bookmarks")
 
   @@map("job_bookmark")
+}
+
+model Conversation {
+  id            String   @id(map: "pk_conversation") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  displayName   String?  @map("display_name") @db.VarChar(50)
+  // type          ConversationType @default(CHAT)
+  avatarUrl     String?  @map("avatar_url") @db.Text
+  lastMessageId String?  @unique @map("last_message_id") @db.Uuid()
+
+  users       UserToConversation[]
+  messages    Message[]
+  lastMessage Message?             @relation("conversation_last_message", fields: [lastMessageId], references: [id])
+
+  @@map("conversation")
+}
+
+model UserToConversation {
+  id                String   @id(map: "pk_user_to_conversation") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  conversationId    String   @map("conversation_id") @db.Uuid
+  userId            String   @map("user_id") @db.Uuid
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  displayName       String?  @map("display_name") @db.VarChar(50)
+  lastReadMessageId String?  @map("last_read_message_id") @db.Uuid
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastReadMessage Message?     @relation("MessageReadBy", fields: [lastReadMessageId], references: [id], onDelete: Cascade)
+  messages        Message[]
+
+  @@unique([conversationId, userId])
+  @@map("user_to_conversation")
+}
+
+model Message {
+  id             String   @id(map: "pk_message") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  conversationId String   @map("conversation_id") @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  content        String   @db.Text
+  type           String   @default("TEXT")
+
+  conversation              Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  lastMessageOfConversation Conversation?        @relation("conversation_last_message")
+  author                    UserToConversation   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  readBy                    UserToConversation[] @relation("MessageReadBy")
+
+  @@map("message")
 }

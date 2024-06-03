@@ -12,12 +12,17 @@ import { JobApplyModule } from './modules/jobApply';
 import { CloudinaryModule } from './modules/cloudinary';
 import { TenantModule } from './modules/tenant';
 import { BookmarkModule } from './modules/bookmark';
+import { ConversationModule } from './modules/conversation/conversation.module';
+import { MessageModule } from './modules/message/message.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
     UserModule,
     AuthModule,
     RoleModule,
@@ -28,7 +33,10 @@ import { BookmarkModule } from './modules/bookmark';
     CloudinaryModule,
     TenantModule,
     CompanyModule,
-    BookmarkModule
+    BookmarkModule,
+    ConversationModule,
+    MessageModule,
+    GatewayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

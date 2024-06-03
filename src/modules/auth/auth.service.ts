@@ -124,6 +124,6 @@ export class AuthService {
     });
 
     const user = await this.userService.findUserById(claims.id);
-    // if (user) return claims;
+    if (user) return claims;
   }
 }

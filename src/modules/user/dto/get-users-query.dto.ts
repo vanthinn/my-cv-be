@@ -20,4 +20,6 @@ export class GetUsersQueryDto {
   @Type(() => Number)
   @IsNumber()
   take?: number = 10;
+  
+  
 }

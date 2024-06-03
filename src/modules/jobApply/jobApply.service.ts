@@ -45,6 +45,8 @@ export class JobApplyService {
 
     }
 
+
+
     async findJobApplyByUser(email: string, jobId: string) {
         const jobApply = await this.dbContext.jobApply.findFirst({ where: { email, jobId } })
         return jobApply
@@ -184,6 +186,76 @@ export class JobApplyService {
     async updateStatus(user: RequestUser, data: updateStatusDto) {
         const { id, status } = data
         const now = new Date().toISOString()
-        const jobApply = await this.dbContext.jobApply.update({ where: { id: id }, data: { status: status, updatedAt: now } })
+        const jobApply = await this.dbContext.jobApply.findUnique({
+            where: {
+                id
+            },
+            include: {
+                job: {
+                    include: {
+                        user: true,
+                    }
+                },
+
+            }
+
+        })
+
+
+        await this.dbContext.$transaction(async (tx) => {
+            await tx.jobApply.update({ where: { id: id }, data: { status: status, updatedAt: now } })
+
+            if (status === 'APPROVED') {
+                const requesterId = jobApply.job.user.id;
+                const candidate = await tx.user.findFirst({
+                    where: {
+                        email: jobApply.email
+                    }
+                })
+
+                const checkExitedConversation = await tx.conversation.findFirst({
+                    where: {
+                        AND: [
+                            {
+                                users: {
+                                    some: {
+                                        userId: requesterId
+                                    }
+                                }
+                            },
+                            {
+                                users: {
+                                    some: {
+                                        userId: candidate.id
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                });
+
+                if (!checkExitedConversation) {
+                    await tx.conversation.create({
+                        data: {
+                            users: {
+                                createMany: {
+                                    data: [{ userId: requesterId }, { userId: candidate.id }]
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    await tx.conversation.update({
+                        where: {
+                            id: checkExitedConversation.id
+                        },
+                        data: { updatedAt: now }
+                    })
+                }
+            }
+        })
+
+
     }
 }
