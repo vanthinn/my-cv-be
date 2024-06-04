@@ -88,3 +88,8 @@ export * from './create-message.dto';
 export * from './update-message.dto';
 export * from './message.entity';
 export * from './message.dto';
+export * from './connect-verification-token.dto';
+export * from './create-verification-token.dto';
+export * from './update-verification-token.dto';
+export * from './verification-token.entity';
+export * from './verification-token.dto';

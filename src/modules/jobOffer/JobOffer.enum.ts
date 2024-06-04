@@ -1,4 +1,4 @@
 export enum GetAllJobOfferOrderByEnum {
-    CONTENT = 'content',
     CREATED_AT = 'createdAt',
+    JOB_TITLE = 'jobTitle',
 }

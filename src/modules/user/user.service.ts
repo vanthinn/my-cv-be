@@ -83,11 +83,36 @@ export class UserService {
             name: true
           }
         },
-        company: true
+        company: true,
       }
     })
     return user;
   }
+
+  getCredentials = async (id: string) => {
+    const user = this.dbContext.user.findUniqueOrThrow({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        refreshToken: true,
+        firstName: true,
+        lastName: true,
+        avatarUrl: true,
+        tenantId: true,
+        roleId: true,
+        role: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+      },
+    });
+
+    return user;
+  };
 
   getAllJobApplyOfUser = async (user: RequestUser) => {
     const listJobApply = await this.dbContext.jobApply.findMany({

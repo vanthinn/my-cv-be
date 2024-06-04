@@ -1,6 +1,8 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsOptional, IsString, Min } from "class-validator";
+import { IsOrderQueryParam } from "src/common/decorator/order.decorator";
+import { GetAllJobApplyOrderByEnum } from "../JobApply.enum";
 
 export class getAllJobApplyDto {
     @ApiPropertyOptional({
@@ -45,4 +47,10 @@ export class getAllJobApplyDto {
     @IsOptional()
     @IsString()
     status?: string;
+
+    @ApiPropertyOptional({})
+    @IsOptional()
+    @IsString()
+    @IsOrderQueryParam('order', GetAllJobApplyOrderByEnum)
+    order?: string;
 }

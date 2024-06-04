@@ -7,7 +7,7 @@ import { isNotEmpty } from "class-validator";
 import { UpdateJobApplyDto } from "src/generated";
 import { getJObApplyByJobIdDto } from "./dto/getJobApplyByJobId.dto";
 import { Prisma } from "@prisma/client";
-import { searchByMode } from "src/common/utils/prisma";
+import { getOrderBy, searchByMode } from "src/common/utils/prisma";
 import { Pagination } from "src/providers";
 import { updateStatusDto } from "./dto/updateStatus.dto";
 import { getAllJobApplyDto } from "./dto/getAllJobApply.dto";
@@ -65,7 +65,7 @@ export class JobApplyService {
     }
 
     async getAllJobApply(user: RequestUser, query: getAllJobApplyDto) {
-        const { search, skip, take, status, companyId } = query
+        const { search, skip, take, status, companyId, order } = query
 
         const whereConditions: Prisma.Enumerable<Prisma.JobApplyWhereInput> = [];
         if (search) {
@@ -91,6 +91,17 @@ export class JobApplyService {
             });
         }
 
+        const mappedOrderType = {
+            jobTitle: 'job.jobTitle',
+        };
+
+        let orderBy: Prisma.JobApplyOrderByWithRelationInput = getOrderBy({
+            defaultValue: 'createdAt',
+            order,
+            mappedOrder: mappedOrderType,
+        });
+
+
         const [total, jobApplies] = await Promise.all([
             this.dbContext.jobApply.count({
                 where: {
@@ -101,6 +112,7 @@ export class JobApplyService {
                 where: {
                     AND: whereConditions,
                 },
+                orderBy,
                 skip,
                 take,
                 select: {
@@ -129,7 +141,7 @@ export class JobApplyService {
     }
 
     async getJobApplyByJobId(user: RequestUser, id: string, query: getJObApplyByJobIdDto) {
-        const { search, skip, take, status } = query
+        const { search, skip, take, status, order } = query
 
         const whereConditions: Prisma.Enumerable<Prisma.JobApplyWhereInput> = [];
         if (search) {
@@ -143,6 +155,18 @@ export class JobApplyService {
                 status: status,
             });
         }
+
+        const mappedOrderType = {
+            jobTitle: 'job.jobTitle',
+        };
+
+        let orderBy: Prisma.JobApplyOrderByWithRelationInput = getOrderBy({
+            defaultValue: 'createdAt',
+            order,
+            mappedOrder: mappedOrderType,
+        });
+
+
 
         const [total, jobApplies] = await Promise.all([
             this.dbContext.jobApply.count({
@@ -158,6 +182,7 @@ export class JobApplyService {
                 },
                 skip,
                 take,
+                orderBy,
                 select: {
                     id: true,
                     candidateName: true,

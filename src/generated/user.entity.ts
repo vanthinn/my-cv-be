@@ -6,6 +6,7 @@ import { CompanyEntity } from './company.entity';
 import { JobEntity } from './job.entity';
 import { JobBookmarkEntity } from './job-bookmark.entity';
 import { UserToConversationEntity } from './user-to-conversation.entity';
+import { VerificationTokenEntity } from './verification-token.entity';
 
 export class UserEntity {
   @ApiProperty({
@@ -117,4 +118,9 @@ export class UserEntity {
     required: false,
   })
   UserToConversation?: UserToConversationEntity[];
+  @ApiProperty({
+    isArray: true,
+    required: false,
+  })
+  tokens?: VerificationTokenEntity[];
 }
