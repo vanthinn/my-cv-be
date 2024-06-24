@@ -170,7 +170,11 @@ export class CVService {
             throw new BadRequestException('Main CV do not deleted');
         }
 
-        const deleteCV = await this.dbContext.cV.delete({ where: { id } })
+        const deleteCV = await this.dbContext.cV.update({
+            where: { id }, data: {
+                deletedAt: new Date().toISOString()
+            }
+        })
         this.logger.log('Deleted the cv records', { deleteCV });
     }
 
@@ -190,7 +194,7 @@ export class CVService {
             }
             const updateCV = await tx.cV.update({
                 where: { id },
-                data: { ...other },
+                data: { ...other, updatedAt: new Date().toISOString() },
             });
         })
 

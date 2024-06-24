@@ -11,6 +11,9 @@ export class BookmarkService {
         const listBookmarks = await this.dbContext.jobBookmark.findMany({
             where: {
                 userId: user.id,
+                job: {
+                    deletedAt: null
+                }
             }, select: {
                 id: true,
                 createdAt: true,

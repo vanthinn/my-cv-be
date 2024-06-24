@@ -14,10 +14,11 @@ import { JobOfferService } from '../jobOffer';
 export class CompanyService {
   constructor(
     private readonly dbContext: PrismaService,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
     @Inject(forwardRef(() => JobOfferService))
     private jobOfferService: JobOfferService,
-  ) {}
+  ) { }
   private readonly logger: Logger = new Logger(CompanyService.name);
 
   async getAllCompany(user: RequestUser, query: getALLCompanyDto) {
@@ -29,7 +30,7 @@ export class CompanyService {
       });
     }
 
-    if (city) {
+    if (city !== 'All Cities') {
       whereConditions.push({
         address: searchByMode(city),
       });
@@ -88,6 +89,7 @@ export class CompanyService {
         updatedAt: true,
         _count: true,
         jobs: true,
+        users: true
       },
     });
     return company;

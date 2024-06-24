@@ -1,0 +1,42 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Job Application Status</title>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; } .container {
+      margin: 0 auto; padding: 20px; max-width: 600px; background-color:
+      #f9f9f9; border: 1px solid #ddd; } .header { text-align: center;
+      padding-bottom: 20px; } .content { padding: 20px; background-color: #fff;
+      border-radius: 4px; border: 1px solid #ddd; } .footer { text-align:
+      center; padding-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <h1>Job Application Status</h1>
+      </div>
+      <div class='content'>
+        <p>Dear {{applicantName}},</p>
+        <p>We are pleased to inform you that you have successfully passed the
+          job application process for the position of
+          {{jobPosition}}
+          at
+          {{companyName}}.</p>
+        <p>Your skills and experience are impressive, and we are excited to move
+          forward with you in the next steps of our hiring process.</p>
+        <p>If you have any questions or need further information, please do not
+          hesitate to contact me through the chat group or by replying to this
+          email.</p>
+        <p>link groupchat: <a href={{link}}>{{link}}</a></p>
+        <p>We look forward to meeting you.</p>
+        <p>Best regards,</p>
+        <p>{{senderName}}<br />{{senderTitle}}<br />{{companyName}}</p>
+      </div>
+      <div class='footer'>
+        <p>&copy; 2024 {{companyName}}. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

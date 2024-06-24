@@ -1,3 +1,4 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
 import { RequestUser } from "src/common";
 import { PrismaService } from "src/database/services";
@@ -11,13 +12,18 @@ import { getOrderBy, searchByMode } from "src/common/utils/prisma";
 import { Pagination } from "src/providers";
 import { updateStatusDto } from "./dto/updateStatus.dto";
 import { getAllJobApplyDto } from "./dto/getAllJobApply.dto";
+import { MailService } from '../mail/mail.service';
+import { JobOfferService } from '../jobOffer';
 
 @Injectable()
 export class JobApplyService {
     constructor(
         private readonly dbContext: PrismaService,
+        private MailerService: MailService,
+        private JobService: JobOfferService,
         @Inject(forwardRef(() => UserService))
         private UserService: UserService) { }
+
     private readonly logger: Logger = new Logger(JobApplyService.name);
 
     async applyJob(user: RequestUser, data: CreateJobApplyDto) {
@@ -29,6 +35,15 @@ export class JobApplyService {
         const cvOfUser = await this.UserService.getCVMainOfUser(user.id)
         if (!cvOfUser) {
             throw new BadRequestException('You do not have any CVs.');
+        }
+        const query = { jobId: data.jobId }
+        const job = await this.JobService.findJobOfferById(user, query)
+        if (job.status === 'INACTIVE') {
+            throw new BadRequestException('Job application deadline has been announced');
+        }
+
+        if (job.deletedAt !== null) {
+            throw new BadRequestException('Job application is deleted');
         }
 
 
@@ -219,6 +234,12 @@ export class JobApplyService {
                 job: {
                     include: {
                         user: true,
+                        company: true,
+                    }
+                },
+                CV: {
+                    include: {
+                        profile: true,
                     }
                 },
 
@@ -260,7 +281,7 @@ export class JobApplyService {
                 });
 
                 if (!checkExitedConversation) {
-                    await tx.conversation.create({
+                    const conversation = await tx.conversation.create({
                         data: {
                             users: {
                                 createMany: {
@@ -269,6 +290,18 @@ export class JobApplyService {
                             }
                         }
                     });
+
+                    const dataMail = {
+                        applicantName: jobApply.CV.profile.firstName + ' ' + jobApply.CV.profile.lastName,
+                        jobPosition: jobApply.job.jobTitle,
+                        companyName: jobApply.job.company.displayName,
+                        senderName: jobApply.job.user.firstName + ' ' + jobApply.job.user.lastName,
+                        senderTitle: 'From',
+                        link: `http://localhost:5173/message/${conversation.id}`
+                    }
+                    const emailSendPass = jobApply.CV.profile.email
+                    await this.MailerService.sendPassJobApplication(emailSendPass, dataMail)
+
                 }
                 else {
                     await tx.conversation.update({
@@ -277,6 +310,17 @@ export class JobApplyService {
                         },
                         data: { updatedAt: now }
                     })
+
+                    const dataMail = {
+                        applicantName: jobApply.CV.profile.firstName + ' ' + jobApply.CV.profile.lastName,
+                        jobPosition: jobApply.job.jobTitle,
+                        companyName: jobApply.job.company.displayName,
+                        senderName: jobApply.job.user.firstName + ' ' + jobApply.job.user.lastName,
+                        senderTitle: 'From',
+                        link: `http://localhost:5173/message/${checkExitedConversation.id}`
+                    }
+                    const emailSendPass = jobApply.CV.profile.email
+                    await this.MailerService.sendPassJobApplication(emailSendPass, dataMail)
                 }
             }
         })

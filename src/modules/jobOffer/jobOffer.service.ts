@@ -15,24 +15,26 @@ import { JobApplyService } from '../jobApply';
 export class JobOfferService {
   constructor(
     private readonly dbContext: PrismaService,
+    @Inject(forwardRef(() => UserService))
+
     private userService: UserService,
-    // private jobApplyService: JobApplyService,
     @Inject(forwardRef(() => CompanyService))
     private companyService: CompanyService,
-  ) {}
+  ) { }
   private readonly logger: Logger = new Logger(JobOfferService.name);
 
   async getAllJobOffers(user: RequestUser, query: GetAllJobOfferDto) {
-    const { search, city, skip, take, order, companyId, userId, experience } =
+    await this.updateJobOfferStatus();
+    const { search, city, skip, take, order, companyId, userId, experience, status } =
       query;
-    const whereConditions: Prisma.Enumerable<Prisma.JobWhereInput> = [];
+    const whereConditions: Prisma.Enumerable<Prisma.JobWhereInput> = [{ deletedAt: null }];
     if (search) {
       whereConditions.push({
         jobTitle: searchByMode(search),
       });
     }
 
-    if (city) {
+    if (city && city !== 'All Cities') {
       whereConditions.push({
         company: {
           address: searchByMode(city),
@@ -50,6 +52,12 @@ export class JobOfferService {
       whereConditions.push({
         companyId: companyId,
       });
+    }
+
+    if (status) {
+      whereConditions.push({
+        status: status,
+      })
     }
 
     let orderBy: Prisma.JobOrderByWithRelationInput = getOrderBy({
@@ -121,7 +129,29 @@ export class JobOfferService {
       });
     }
 
+
     return Pagination.of({ take, skip }, total, newJobs);
+  }
+
+  private async updateJobOfferStatus() {
+    const now = new Date();
+    const nextDay = new Date(now);
+
+    nextDay.setDate(now.getDate() + 1);
+    nextDay.setHours(0, 0, 0, 0);
+
+    const deadline = new Date(nextDay);
+
+    await this.dbContext.job.updateMany({
+      where: {
+        deadline: {
+          lt: deadline
+        }
+      },
+      data: {
+        status: 'INACTIVE'
+      }
+    })
   }
 
   async createJobOffer(user: RequestUser, data: CreateJobOfferDto) {
@@ -129,7 +159,7 @@ export class JobOfferService {
     const jobOffer = await this.dbContext.job.create({
       data: {
         ...data,
-        deadline: new Date(data.deadline),
+        deadline: new Date(data.deadline).toISOString(),
         companyId: userTmp.company.id,
         userId: user.id,
         status: 'ACTIVE',
@@ -142,7 +172,10 @@ export class JobOfferService {
   async updateJobOffer(user: RequestUser, id: string, data: UpdateJobOfferDto) {
     const updateJob = await this.dbContext.job.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        deadline: new Date(data.deadline).toISOString()
+      },
     });
   }
 
@@ -156,7 +189,7 @@ export class JobOfferService {
 
   async findJobOfferById(
     user: RequestUser,
-    query: { jobId: string; userId: string },
+    query: { jobId: string; userId?: string },
   ) {
     const { jobId, userId } = query;
     const jobOffer = await this.dbContext.job.findUnique({
@@ -174,6 +207,7 @@ export class JobOfferService {
         status: true,
         createdAt: true,
         updatedAt: true,
+        deletedAt: true,
         company: true,
         user: true,
         // jobApply: true,

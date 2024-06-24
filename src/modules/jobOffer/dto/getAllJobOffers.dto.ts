@@ -27,6 +27,14 @@ export class GetAllJobOfferDto {
   })
   @IsOptional()
   @IsString()
+  status?: string;
+
+  @ApiPropertyOptional({
+    description: 'Search by keyword',
+    example: 'Test',
+  })
+  @IsOptional()
+  @IsString()
   experience?: string;
 
   @ApiPropertyOptional({

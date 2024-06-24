@@ -12,6 +12,7 @@ import { getUsersPayload } from './dto/getUserPayload.dto';
 import { PrismaService } from 'src/database/services';
 import { MailService } from '../mail/mail.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -206,32 +207,35 @@ export class AuthService {
     });
   }
 
-  // async changePassword(reqUser: RequestUser, body: ChangePasswordDto) {
-  //   const { oldPassword, newPassword } = body;
-  //   if (oldPassword === newPassword) {
-  //     throw new BadRequestException('You are input the same password');
-  //   }
+  async changePassword(reqUser: RequestUser, body: ChangePasswordDto) {
+    console.log(reqUser)
+    const { oldPassword, newPassword } = body;
+    if (oldPassword === newPassword) {
+      throw new BadRequestException('You are input the same password');
+    }
 
-  //   const user = await this.dbContext.user.findUnique({
-  //     where: {
-  //       id: reqUser.id,
-  //     },
-  //   });
+    const user = await this.dbContext.user.findUnique({
+      where: {
+        id: reqUser.id,
+        tenantId: reqUser.tenantId
+      },
+    });
 
-  //   const isOldPassword = await compareHash(oldPassword, user.password);
-  //   if (!isOldPassword) {
-  //     throw new BadRequestException('You have inputted a wrong password');
-  //   }
+    const isOldPassword = await compareHash(oldPassword, user.password);
+    if (!isOldPassword) {
+      throw new BadRequestException('You have inputted a wrong password');
+    }
 
-  //   const hashedPassword = await hashPassword(newPassword);
+    const hashedPassword = await hashPassword(newPassword);
 
-  //   await this.dbContext.user.update({
-  //     where: {
-  //       id: reqUser.id,
-  //     },
-  //     data: {
-  //       password: hashedPassword,
-  //     },
-  //   });
-  // }
+    await this.dbContext.user.update({
+      where: {
+        id: reqUser.id,
+        tenantId: reqUser.tenantId
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+  }
 }

@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { SendMailPassCVDto } from './dto/sendPassCV.dto';
 
 @Injectable()
 export class MailService {
@@ -12,6 +13,17 @@ export class MailService {
       template: './resetPasswordToken',
       context: {
         token,
+      },
+    });
+  }
+
+  async sendPassJobApplication(email: string, data: SendMailPassCVDto) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'PASS CV',
+      template: './job-application-pass',
+      context: {
+        ...data,
       },
     });
   }

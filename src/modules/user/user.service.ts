@@ -17,7 +17,8 @@ export class UserService {
     private dbContext: PrismaService,
     private roleService: RoleService,
     @Inject(forwardRef(() => JobApplyService))
-    private JobApplyService: JobApplyService) { }
+    private JobApplyService: JobApplyService
+  ) { }
   private readonly logger: Logger = new Logger(UserService.name);
 
   createUser = async (data: CreateUserDto) => {
@@ -83,7 +84,25 @@ export class UserService {
             name: true
           }
         },
-        company: true,
+        company: {
+          select: {
+            id: true,
+            displayName: true,
+            address: true,
+            logoUrl: true,
+            imageUrl: true,
+            email: true,
+            phoneNumber: true,
+            fieldOfActivity: true,
+            scale: true,
+            description: true,
+            website: true,
+            createdAt: true,
+            updatedAt: true,
+            deletedAt: true,
+            users: true
+          }
+        },
       }
     })
     return user;
@@ -252,7 +271,9 @@ export class UserService {
 
   getAllCVOfUser = async (id: string) => {
     const cvs = await this.dbContext.cV.findMany({
-      where: { userId: id }, select: {
+      where: {
+        userId: id, deletedAt: null
+      }, orderBy: { updatedAt: Prisma.SortOrder.desc, }, select: {
         id: true,
         color: true,
         fontSize: true,

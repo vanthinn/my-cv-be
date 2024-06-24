@@ -6,7 +6,7 @@ import { UserModule } from "../user";
 import { CompanyModule } from "../company";
 
 @Module({
-    imports: [DatabaseModule, UserModule, forwardRef(() => CompanyModule)],
+    imports: [DatabaseModule, forwardRef(() => UserModule), CompanyModule],
     controllers: [JobOfferController],
     providers: [JobOfferService],
     exports: [JobOfferService],
