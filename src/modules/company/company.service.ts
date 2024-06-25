@@ -23,7 +23,11 @@ export class CompanyService {
 
   async getAllCompany(user: RequestUser, query: getALLCompanyDto) {
     const { search, city, skip, take, order } = query;
-    const whereConditions: Prisma.Enumerable<Prisma.CompanyWhereInput> = [];
+    const whereConditions: Prisma.Enumerable<Prisma.CompanyWhereInput> = [
+      {
+        deletedAt: null
+      }
+    ];
     if (search) {
       whereConditions.push({
         displayName: searchByMode(search),

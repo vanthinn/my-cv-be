@@ -180,7 +180,8 @@ export class UserService {
         name: {
           not: UserRole.ADMIN
         }
-      }
+      },
+      deletedAt: null
     }];
     if (search) {
       whereConditions.push({
@@ -318,5 +319,14 @@ export class UserService {
     })
 
     return cv;
+  }
+
+  deleteCVById = async (user: RequestUser, id: string) => {
+    const deleteUser = await this.dbContext.user.update({
+      where: { id }, data: {
+        deletedAt: new Date().toISOString()
+      }
+    })
+    this.logger.log('Deleted the user records', { deleteUser });
   }
 }

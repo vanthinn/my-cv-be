@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { query } from 'express';
 import { AccessTokenGuard } from 'src/guard';
@@ -67,6 +67,11 @@ export class UserController {
   // @HttpCode(HttpStatus.NO_CONTENT)
   async update(@Param() { id }: UUIDParam, @Body() user: UpdateUserDto) {
     return this.userService.updateUser(id, user);
+  }
+
+  @Delete(":id")
+  async deleteCV(@ReqUser() user: RequestUser, @Param() { id }: UUIDParam) {
+    return this.userService.deleteCVById(user, id)
   }
 
 }

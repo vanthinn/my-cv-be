@@ -7,6 +7,15 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  deletedAt?: Date;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

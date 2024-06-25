@@ -18,6 +18,13 @@ export class UserDto {
   })
   updatedAt: Date;
   @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  deletedAt: Date | null;
+  @ApiProperty({
     required: false,
   })
   firstName: string;
