@@ -116,7 +116,6 @@ export class JobApplyService {
             mappedOrder: mappedOrderType,
         });
 
-
         const [total, jobApplies] = await Promise.all([
             this.dbContext.jobApply.count({
                 where: {
@@ -145,6 +144,8 @@ export class JobApplyService {
                     job: {
                         select: {
                             jobTitle: true,
+                            id: true,
+                            companyId: true
                         }
                     }
                 }

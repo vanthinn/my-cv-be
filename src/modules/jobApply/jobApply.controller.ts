@@ -8,6 +8,7 @@ import { ReqUser } from 'src/common/decorator/request-user.decorator';
 import { AccessTokenGuard } from 'src/guard';
 import { UUIDParam } from 'src/common/types/uuid-param';
 import { getJObApplyByJobIdDto } from './dto/getJobApplyByJobId.dto';
+import { getAllJobApplyDto } from './dto/getAllJobApply.dto';
 
 @ApiTags('Job-apply')
 @Controller('job-apply')
@@ -17,7 +18,7 @@ export class JobApplyController {
     @UseGuards(AccessTokenGuard)
     @ApiBearerAuth()
     @Get()
-    async getAllJobApply(@ReqUser() user: RequestUser, @Query() query: getJObApplyByJobIdDto) {
+    async getAllJobApply(@ReqUser() user: RequestUser, @Query() query: getAllJobApplyDto) {
         return this.JobApplyService.getAllJobApply(user, query);
     }
 
