@@ -1,4 +1,4 @@
 export enum GetAllCompanyOrderByEnum {
-    CONTENT = 'content',
+    COMPANY_NAME = 'displayName',
     CREATED_AT = 'createdAt',
 }
